@@ -1,0 +1,120 @@
+name: price-buddy
+recipe: laravel
+
+# Basic config.
+config:
+  flavor: laravel
+#  build:
+#    - composer install
+  env_file:
+    - .env
+
+# Additional lando commands.
+tooling:
+  build:
+    service: appserver
+    description: Run composer install and npm build
+    cmd:
+      - composer install
+      - npm rebuild node-sass
+      - npm install
+      - npm run prod
+  npm:
+    service: appserver
+    description: Runs a npm command
+  artisan:
+    service: appserver
+    description: Run a artisan command
+    cmd: php artisan
+  clear:
+    service: appserver
+    description: Clear all local caches and configs
+    cmd:
+      - rm bootstrap/cache/*.php
+      - php artisan optimize:clear
+      - php artisan config:clear
+      - php artisan cache:clear
+      - composer dump-autoload
+  watch:
+    service: appserver
+    description: watches changes to theme and recompile
+    cmd:
+      - killall node 2>/dev/null || true
+      - npm run dev -- --host --port 3000
+  prepare-storage:
+    service: appserver
+    description: Ensure storage dirs are all setup correctly (only run once after fresh clone)
+    cmd:
+      - mkdir -p storage/framework/{sessions,views}
+      - mkdir -p storage/framework/cache/data
+      - mkdir -p storage/app/public
+      - mkdir -p storage/logs
+      - chmod -R 777 /home/.composer
+      - ln -s ../storage/app/public public/storage
+      - echo "Done, set permissions with 'sudo chmod +w -R storage'"
+  xdebug-on:
+    description: Enable xdebug for php.
+    cmd:
+      - php: cp /app/lagoon/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -USR2 php-fpm || true
+      - appserver: cp /app/lagoon/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -USR2 php-fpm || true
+    user: root
+  xdebug-off:
+    description: Disable xdebug for php.
+    cmd:
+      - php: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -USR2 php-fpm || true
+      - appserver: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -USR2 php-fpm || true
+    user: root
+  phpcs-fix:
+    description: Fix CS errors
+    service: appserver
+    cmd: ./vendor/bin/pint
+  phpcs:
+    description: Fix CS errors
+    service: appserver
+    cmd:
+      - ./vendor/bin/pint --test
+      - ./vendor/bin/phpstan analyse
+  test:
+    description: Run tests
+    service: appserver
+    cmd: ./vendor/bin/pest -c /app/phpunit.xml
+  seed:
+    service: appserver
+    description: Full db schema setup and seed of content for dev
+    cmd:
+      - php artisan migrate:fresh --seed --seeder=Database\\Seeders\\DatabaseSeeder
+      - php artisan cache:clear
+
+# Additional services that get started with the project.
+services:
+  appserver:
+    api: 3
+    type: lando
+    overrides:
+      build: ./docker/php
+    services:
+      command: apache2-foreground
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - mariadb
+    overrides:
+      environment:
+        PMA_USER: lagoon
+        PMA_PASSWORD: lagoon
+    scanner:
+      retry: 2
+  mailhog:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+    scanner:
+      retry: 2
+
+# Routes to access additional services.
+proxy:
+  mailhog:
+    - mail.price-buddy.lndo.site
+  phpmyadmin:
+    - pma.price-buddy.lndo.site
