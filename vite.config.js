@@ -1,11 +1,30 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from 'vite'
+import laravel, { refreshPaths } from 'laravel-vite-plugin'
+import sassGlobImports from 'vite-plugin-sass-glob-import';
 
 export default defineConfig({
     plugins: [
+        sassGlobImports(),
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
+            input: ['resources/scss/app.scss', 'resources/js/app.js'],
+            refresh: [
+                ...refreshPaths,
+                'app/Filament/**',
+                'app/Forms/Components/**',
+                'app/Livewire/**',
+                'app/Infolists/Components/**',
+                'app/Providers/Filament/**',
+                'app/Tables/Columns/**',
+            ],
         }),
     ],
-});
+    server: {
+        host: 'price-buddy.lndo.site',
+        port: 3000,
+        hmr: {
+            host: 'price-buddy.lndo.site',
+            protocol: 'ws',
+            port: 3000
+        }
+    },
+})

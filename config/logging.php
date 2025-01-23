@@ -4,6 +4,7 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Yoeriboven\LaravelLogDb\DatabaseLogger;
 
 return [
 
@@ -71,6 +72,13 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+        ],
+
+        'db' => [
+            'driver' => 'custom',
+            'via' => DatabaseLogger::class,
+            'connection' => env('LOG_DB_CONNECTION'), // Optional, defaults to app's DB connection
+            'days' => 7, // Optional, retention period in days
         ],
 
         'slack' => [

@@ -20,7 +20,7 @@ tooling:
       - npm install
       - npm run prod
   npm:
-    service: appserver
+    service: node
     description: Runs a npm command
   artisan:
     service: appserver
@@ -36,7 +36,7 @@ tooling:
       - php artisan cache:clear
       - composer dump-autoload
   watch:
-    service: appserver
+    service: node
     description: watches changes to theme and recompile
     cmd:
       - killall node 2>/dev/null || true
@@ -91,17 +91,43 @@ services:
     api: 3
     type: lando
     overrides:
-      build: ./docker/php
+      build:
+        context: .
+        dockerfile: docker/php.dockerfile
     services:
-      command: apache2-foreground
+      command: /app-entrypoint.sh
+    scanner:
+      retry: 2
+  scraper:
+    type: lando
+    app_mount: false
+    overrides:
+      image: amerkurev/scrapper:latest
+      ports:
+        - 3001:3000
+    services:
+      command:
+        - "uvicorn"
+        - "--app-dir"
+        - "/home/user/app"
+        - "main:app"
+        - "--host"
+        - "0.0.0.0"
+        - "--port"
+        - "3000"
+  node:
+    type: node:20
+    overrides:
+      ports:
+        - 3000:3000
   phpmyadmin:
     type: phpmyadmin
     hosts:
-      - mariadb
+      - database
     overrides:
       environment:
-        PMA_USER: lagoon
-        PMA_PASSWORD: lagoon
+        PMA_USER: laravel
+        PMA_PASSWORD: laravel
     scanner:
       retry: 2
   mailhog:
@@ -118,3 +144,5 @@ proxy:
     - mail.price-buddy.lndo.site
   phpmyadmin:
     - pma.price-buddy.lndo.site
+  scraper:
+    - scraper.price-buddy.lndo.site:3000
