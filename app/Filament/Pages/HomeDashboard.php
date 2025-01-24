@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\ProductResource\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Pages\Page;
 use Filament\Support\Facades\FilamentIcon;
@@ -66,5 +67,12 @@ class HomeDashboard extends Page
     public function getTitle(): string|Htmlable
     {
         return static::$title ?? __('filament-panels::pages/dashboard.title');
+    }
+
+    public function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
+        ];
     }
 }

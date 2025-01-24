@@ -5,7 +5,7 @@ namespace App\Notifications;
 use App\Models\Product;
 use App\Models\Url;
 use App\Models\User;
-use App\Services\NotificationsHelper;
+use App\Services\Helpers\NotificationsHelper;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
@@ -66,7 +66,7 @@ class PriceAlertNotification extends Notification
             'productName' => Str::limit(($this->product->title ?? 'Unknown product'), 100),
             'imgUrl' => $this->product?->image,
             'newPrice' => $this->url->latest_price_formatted,
-            'averagePrice' => $this->url->average_price,
+            'averagePrice' => $this->product?->priceAggregates('avg'),
         ];
     }
 

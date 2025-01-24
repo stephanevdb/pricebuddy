@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\ProductResource\Pages;
 
+use App\Enums\Icons;
+use App\Filament\Actions\BaseAction;
 use App\Filament\Resources\ProductResource;
 use App\Filament\Resources\ProductResource\Widgets\UrlsTableWidget;
 use Filament\Actions;
@@ -14,14 +16,18 @@ class EditProduct extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            ProductResource\Actions\AddUrlAction::make(),
+            BaseAction::make('view')->icon(Icons::View->value)
+                ->label(__('View'))
+                ->resourceName('product')
+                ->resourceUrl('view', $this->record),
+            Actions\DeleteAction::make()->icon(Icons::Delete->value),
         ];
     }
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return $this->getResource()::getUrl('view', ['record' => $this->record]);
     }
 
     protected function getFooterWidgets(): array

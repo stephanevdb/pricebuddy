@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\StoreResource\Pages;
 
+use App\Enums\Icons;
+use App\Filament\Actions\BaseAction;
 use App\Filament\Resources\StoreResource;
 use App\Filament\Resources\StoreResource\Widgets\TestResultsWidget;
 use App\Models\Store;
@@ -61,8 +63,11 @@ class TestStore extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('edit')->url(fn () => StoreResource::getUrl('edit', ['record' => $this->record]))->label('Edit'),
-            Actions\DeleteAction::make(),
+            BaseAction::make('edit')->icon(Icons::Edit->value)
+                ->resourceName('store')
+                ->resourceUrl('edit', $this->record)
+                ->label(__('Edit')),
+            Actions\DeleteAction::make()->icon(Icons::Delete->value),
         ];
     }
 

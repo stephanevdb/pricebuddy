@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Services\CurrencyService;
+use App\Services\Helpers\CurrencyHelper;
 use App\Services\ScrapeUrl;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -115,7 +115,7 @@ class Url extends Model
         }
 
         return $this->prices()->create([
-            'price' => CurrencyService::toFloat($price),
+            'price' => CurrencyHelper::toFloat($price),
             'store_id' => $this->store_id,
         ]);
     }

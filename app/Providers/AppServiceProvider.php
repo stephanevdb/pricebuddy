@@ -5,7 +5,7 @@ namespace App\Providers;
 use App\Enums\NotificationMethods;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
-use App\Services\NotificationsHelper;
+use App\Services\Helpers\NotificationsHelper;
 use Filament\Facades\Filament;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Facades\FilamentView;

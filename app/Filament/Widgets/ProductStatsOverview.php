@@ -2,11 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\Icons;
+use App\Dto\PriceCacheDto;
 use App\Models\Product;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Str;
 
 class ProductStatsOverview extends BaseWidget
 {
@@ -36,28 +35,16 @@ class ProductStatsOverview extends BaseWidget
             ->get()
             ->filter(fn (Product $product) => isset($product->price_cache[0]))
             ->map(function (Product $product) {
-                $lowest = collect($product->price_cache)->sortBy('price')->first();
+                /** @var PriceCacheDto $lowest */
+                $lowest = $product->getPriceCache()->first();
 
-                $icon = Icons::TrendNone->value;
-                $color = 'warning';
-                $trend = 'No change';
-
-                if (! is_null($lowest['trend'])) {
-                    $icon = Icons::getTrendIcon($lowest['trend']);
-                    $color = $lowest['trend_color'];
-                    $trend = $lowest['trend'] === 'up'
-                        ? 'Price increase'
-                        : 'Price decrease';
-                }
-
-                return Stat::make(Str::limit($product->title, 40), $lowest['price'])
-                    ->description($trend)
-                    ->descriptionIcon($icon)
+                return Stat::make($product->title(40), $lowest->getPriceFormatted())
+                    ->description($lowest->getTrendText())
+                    ->descriptionIcon($lowest->getTrendIcon())
                     ->chart(
-                        collect($lowest['history'])->values()->reverse()->take(10)
-                            ->reverse()->values()->toArray()
+                        $lowest->getHistory(10)->values()->toArray()
                     )
-                    ->color($color)
+                    ->color($lowest->getTrendColor())
                     ->url($product->action_urls['view']);
             })->values();
 

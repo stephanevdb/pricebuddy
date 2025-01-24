@@ -6,10 +6,12 @@ use App\Enums\NotificationMethods;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Traits\FormHelperTrait;
 use App\Models\User;
+use App\Providers\Filament\AdminPanelProvider;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -59,11 +61,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\TextColumn::make('name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('email')
+                        ->searchable(),
+                ])->from('sm'),
             ])
+            ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
             ->filters([
                 //
             ])

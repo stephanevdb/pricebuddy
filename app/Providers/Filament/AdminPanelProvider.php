@@ -3,6 +3,9 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\HomeDashboard;
+use App\Filament\Pages\Login;
+use App\Filament\Resources\LogMessageResource;
+use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -22,13 +25,15 @@ class AdminPanelProvider extends PanelProvider
 {
     const PRIMARY_COLOR = Color::Teal;
 
+    const DEFAULT_PAGINATION = [25, 50, 100, 'all'];
+
     public function panel(Panel $panel): Panel
     {
         return $panel
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(Login::class)
             ->colors([
                 'primary' => self::PRIMARY_COLOR,
             ])
@@ -43,6 +48,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 SpotlightPlugin::make(),
+                QuickCreatePlugin::make()
+                    ->excludes([
+                        LogMessageResource::class,
+                    ]),
             ])
             ->middleware([
                 EncryptCookies::class,

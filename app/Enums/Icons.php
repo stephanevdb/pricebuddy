@@ -11,6 +11,18 @@ enum Icons: string
 
     case TrendNone = 'heroicon-m-arrow-long-right';
 
+    case Min = 'heroicon-o-arrow-long-down';
+
+    case Max = 'heroicon-o-arrow-long-up';
+
+    case Delete = 'heroicon-o-trash';
+
+    case View = 'heroicon-o-eye';
+
+    case Edit = 'heroicon-o-pencil-square';
+
+    case Add = 'heroicon-o-plus-circle';
+
     public static function getTrendIcon(?string $trend): string
     {
         return match ($trend) {

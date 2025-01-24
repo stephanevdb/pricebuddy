@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\LogMessageResource\Pages;
 
 use App\Filament\Resources\LogMessageResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListLogMessages extends ListRecords
@@ -12,8 +11,6 @@ class ListLogMessages extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            Actions\CreateAction::make(),
-        ];
+        return [];
     }
 }

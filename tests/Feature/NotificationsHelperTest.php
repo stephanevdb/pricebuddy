@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\NotificationMethods;
-use App\Services\NotificationsHelper;
+use App\Services\Helpers\NotificationsHelper;
 use App\Settings\AppSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use NotificationChannels\Pushover\PushoverChannel;

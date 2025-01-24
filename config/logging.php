@@ -55,7 +55,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => explode(',', env('LOG_STACK', 'single')),
+            'channels' => array_merge(explode(',', env('LOG_STACK', 'single')), ['db']),
             'ignore_exceptions' => false,
         ],
 

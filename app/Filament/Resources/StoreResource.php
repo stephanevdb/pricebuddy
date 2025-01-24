@@ -9,15 +9,19 @@ use App\Filament\Resources\StoreResource\Pages\EditStore;
 use App\Filament\Resources\StoreResource\Pages\ListStores;
 use App\Filament\Resources\StoreResource\Pages\TestStore;
 use App\Models\Store;
+use App\Providers\Filament\AdminPanelProvider;
 use App\Rules\StoreUrl;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
@@ -118,21 +122,37 @@ class StoreResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('initials')
-                    ->formatStateUsing(fn (string $state): View => view(
-                        'components.initials',
-                        ['initials' => $state],
-                    ))
-                    ->width('7%')
-                    ->label('')
-                    ->alignCenter(),
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable()
-                    ->description(fn (Store $record): HtmlString => $record->domains_html),
+                Split::make([
+                    TextColumn::make('initials')
+                        ->formatStateUsing(fn (string $state): View => view(
+                            'components.initials',
+                            ['initials' => $state],
+                        ))
+                        ->width('7%')
+                        ->label('')
+                        ->grow(false)
+                        ->alignCenter(),
+                    TextColumn::make('name')
+                        ->searchable()
+                        ->sortable()
+                        ->weight(FontWeight::Bold)
+                        ->description(fn (Store $record): HtmlString => $record->domains_html),
+                    TextColumn::make('settings.scraper_service')
+                        ->label('Scraper')
+                        ->badge()
+                        ->sortable()
+                        ->formatStateUsing(fn (string $state) => strtoupper($state))
+                        ->color(fn (Store $record): array => ScraperService::tryFrom($record->scraper_service)->getColor())
+                        ->grow(false),
+                ]),
+
             ])
+            ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
+            ->defaultSort('name')
             ->filters([
-                //
+                SelectFilter::make('settings->scraper_service')
+                    ->options(ScraperService::class)
+                    ->label('Scraper'),
             ])
             ->actions([
                 EditAction::make(),

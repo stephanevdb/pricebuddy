@@ -2,7 +2,11 @@
 
 namespace App\Models;
 
+use App\Dto\PriceCacheDto;
 use App\Enums\StatusEnum;
+use App\Enums\Trend;
+use App\Filament\Actions\BaseAction;
+use App\Services\Helpers\CurrencyHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -14,8 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 /**
@@ -24,14 +26,15 @@ use Illuminate\Support\Str;
  * @property string $primary_image
  * @property ?string $image
  * @property array $action_urls
+ * @property ?string $view_url
  * @property array $price_cache
  * @property string $average_price
- * @property Collection $current_prices
  * @property Collection $urls
  * @property ?float $notify_price
  * @property ?float $notify_percent
  * @property ?User $user
  * @property int $user_id
+ * @property array $price_aggregates
  */
 class Product extends Model
 {
@@ -45,6 +48,7 @@ class Product extends Model
     protected $casts = [
         'status' => StatusEnum::class,
         'price_cache' => 'array',
+        'created_at' => 'datetime',
     ];
 
     public static function booted()
@@ -125,24 +129,23 @@ class Product extends Model
         return $query->where('user_id', auth()->id());
     }
 
+    /**
+     * Scope lowest price in days.
+     */
+    public function scopeLowestPriceInDays(EloquentBuilder $query, int $days = 7): EloquentBuilder
+    {
+        return $query->whereHas('prices', function ($priceQuery) use ($days) {
+            $priceQuery
+                ->where('prices.created_at', '>=', Carbon::now()->subDays($days)->startOfDay())
+                ->where('prices.created_at', '<', Carbon::now()->startOfDay())
+                ->where('prices.price', '>', 0)
+                ->whereColumn('current_price', '<', 'prices.price');
+        });
+    }
+
     /***************************************************
      * Attributes.
      **************************************************/
-
-    /**
-     * Current price cache for table column.
-     */
-    public function currentPricesColumn(): Attribute
-    {
-        return Attribute::make(
-            get: function ($value) {
-                return new HtmlString(collect($this->price_cache)
-                    ->map(fn ($price) => $price['price'].' ('.$price['store_name'].')'
-                    )
-                    ->implode('<br />'));
-            },
-        );
-    }
 
     /**
      * Price trend for lowest priced store.
@@ -150,10 +153,11 @@ class Product extends Model
     public function trend(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                return collect($this->price_cache)
-                    ->pluck('trend')
-                    ->first();
+            get: function (): string {
+                /** @var PriceCacheDto $first */
+                $first = $this->getPriceCache()->first();
+
+                return $first->getTrend();
             },
         );
     }
@@ -161,14 +165,13 @@ class Product extends Model
     /**
      * Price trend for lowest priced store.
      */
-    public function averagePrice(): Attribute
+    public function priceAggregates(): Attribute
     {
         return Attribute::make(
-            get: function ($value) {
-                $avg = $this->prices()->avg('price') ?? 0;
-
-                return Number::currency(round($avg, 2));
-            },
+            get: fn (): Collection => collect(['max', 'avg', 'min'])
+                ->mapWithKeys(fn ($method) => [$method => $this->getPriceCacheAggregate($method)])
+                ->filter(fn ($value) => $value > 0)
+                ->mapWithKeys(fn ($value, $method) => [$method => CurrencyHelper::toString($value)])
         );
     }
 
@@ -188,8 +191,16 @@ class Product extends Model
     public function titleShort(): Attribute
     {
         return Attribute::make(
-            get: fn () => Str::limit($this->title, 20)
+            get: fn () => $this->title(20)
         );
+    }
+
+    /**
+     * Get the view url for the product.
+     */
+    public function getViewUrlAttribute(): ?string
+    {
+        return $this->action_urls['view'] ?? null;
     }
 
     /**
@@ -199,9 +210,9 @@ class Product extends Model
     {
         return $this->getKey()
             ? [
-                'edit' => route('filament.admin.resources.products.edit', $this),
-                'view' => route('filament.admin.resources.products.view', $this),
-                'fetch' => route('filament.admin.resources.products.fetch', $this),
+                'edit' => route(BaseAction::ROUTE_NAMESPACE.'products.edit', $this),
+                'view' => route(BaseAction::ROUTE_NAMESPACE.'products.view', $this),
+                'fetch' => route(BaseAction::ROUTE_NAMESPACE.'products.fetch', $this),
             ]
             : [];
     }
@@ -211,47 +222,66 @@ class Product extends Model
      **************************************************/
 
     /**
+     * Get the price cache for this product.
+     *
+     * @return Collection<PriceCacheDto>
+     */
+    public function getPriceCache(): Collection
+    {
+        return collect($this->price_cache)
+            ->sortBy('price', false)
+            ->map(fn ($price) => PriceCacheDto::fromArray($price))
+            ->values();
+    }
+
+    /**
+     * Get the price aggregate for this product via getPriceCache().
+     */
+    public function getPriceCacheAggregate(string $method = 'avg', ?int $urlId = null): float|int
+    {
+        $cache = $this->getPriceCache();
+
+        if ($urlId) {
+            $cache->filter(fn (PriceCacheDto $price) => $price->getUrlId() === $urlId);
+        }
+
+        return $cache->map(fn (PriceCacheDto $price) => $price->getHistory()->values()->toArray())
+            ->flatten()
+            ->{$method}();
+    }
+
+    /**
      * Build a price cache array.
      */
     public function buildPriceCache(): Collection
     {
         $history = $this->getPriceHistory();
-        $stores = Store::findMany($history->keys());
+        $urls = Url::findMany($history->keys());
 
-        return $stores
-            ->map(function ($store) use ($history): array {
-                /** @var Store $store */
+        return $urls
+            ->map(function ($url) use ($history): array {
+                /** @var Url $url */
                 /** @var Collection $storeHistory */
-                $storeHistory = $history->get($store->getKey());
-
-                /** @var ?Url $url */
-                $url = $this->urls()->where('store_id', $store->getKey())->oldest('id')->first();
+                $storeHistory = $history->get($url->getKey());
+                /** @var ?Store $store */
+                $store = $url->store;
 
                 // Build trend.
                 $lastTwo = $storeHistory->values()->reverse()->take(2)->values()->toArray();
-                $trend = null;
-                if (count($lastTwo) === 2 && $lastTwo[0] !== $lastTwo[1]) {
-                    $trend = ($lastTwo[0] - $lastTwo[1]) > 0 ? 'up' : 'down';
-                }
+                $trend = Trend::getTrendDirection($lastTwo);
 
-                // Build output.
+                // Build output. @todo replace with DTO
                 return [
                     'store_id' => $store->getKey(),
                     'store_name' => $store->name,
-                    'url_id' => $url?->getKey(),
-                    'url' => $url?->url,
+                    'url_id' => $url->getKey(),
+                    'url' => $url->url,
                     'trend' => $trend,
-                    'trend_color' => match ($trend) {
-                        'down' => 'success',
-                        'up' => 'danger',
-                        default => 'warning',
-                    },
-                    'price' => Number::currency($storeHistory->last()),
-                    'price_raw' => $storeHistory->last(),
+                    'price' => $storeHistory->last(),
                     'history' => $storeHistory->toArray(),
                 ];
             })
-            ->sortBy('price')
+            ->sortBy('price', false)
             ->values();
     }
 
@@ -280,6 +310,7 @@ class Product extends Model
         });
 
         $this->updatePriceCache();
+
     }
 
     /**
@@ -288,7 +319,7 @@ class Product extends Model
     public function updatePriceCache(): void
     {
         $priceCache = $this->buildPriceCache()->toArray();
-        $this->update(['price_cache' => $priceCache]);
+        $this->update(['price_cache' => $priceCache, 'current_price' => data_get($priceCache, '0.price', 0)]);
     }
 
     /**
@@ -301,7 +332,7 @@ class Product extends Model
             ->where('prices.price', '>', 0)
             ->orderBy('prices.created_at')
             ->get()
-            ->groupBy('store_id')
+            ->groupBy('url_id')
             ->mapWithKeys(function ($prices, int $storeId) {
                 // All price entries for the store.
                 $storeHistory = $prices->sortBy('created_at')
@@ -367,5 +398,10 @@ class Product extends Model
         }
 
         return false;
+    }
+
+    public function title(int $length = 1000): string
+    {
+        return Str::limit($this->title, $length);
     }
 }

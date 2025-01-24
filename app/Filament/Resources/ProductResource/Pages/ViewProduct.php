@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\ProductResource\Pages;
 
+use App\Enums\Icons;
+use App\Filament\Actions\BaseAction;
 use App\Filament\Resources\ProductResource;
-use App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart;
 use App\Models\Product;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
@@ -22,18 +23,23 @@ class ViewProduct extends ViewRecord
         return $this->record->title;
     }
 
-    protected function getFooterWidgets(): array
-    {
-        return [
-            PriceHistoryChart::class,
-        ];
-    }
-
     public function getFooterWidgetsColumns(): int|array
     {
         return [
             'sm' => 1,
             'xl' => 1,
+        ];
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ProductResource\Actions\AddUrlAction::make(),
+            ProductResource\Actions\FetchAction::make(),
+            BaseAction::make('edit_product')->icon(Icons::Edit->value)
+                ->label(__('Edit'))
+                ->resourceName('product')
+                ->resourceUrl('edit', $this->record),
         ];
     }
 }

@@ -19,7 +19,7 @@ class CreateProduct extends CreateRecord
         $url = data_get($data, 'url');
         $productId = data_get($data, 'product_id');
 
-        $urlModel = Url::createFromUrl($url, $productId);
+        $urlModel = Url::createFromUrl($url, $productId, auth()->id());
 
         return $urlModel->product;
     }

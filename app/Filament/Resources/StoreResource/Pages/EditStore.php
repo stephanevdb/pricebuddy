@@ -13,8 +13,11 @@ class EditStore extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('test')->url(fn () => StoreResource::getUrl('test', ['record' => $this->record]))->label('Test'),
-            Actions\DeleteAction::make(),
+            Actions\Action::make('test')
+                ->url(fn () => StoreResource::getUrl('test', ['record' => $this->record]))
+                ->label('Test')->color('gray')
+                ->icon('heroicon-o-rocket-launch'),
+            Actions\DeleteAction::make()->icon('heroicon-o-trash'),
         ];
     }
 

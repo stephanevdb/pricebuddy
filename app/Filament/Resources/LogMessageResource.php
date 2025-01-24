@@ -3,9 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LogMessageResource\Pages;
+use App\Providers\Filament\AdminPanelProvider;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
@@ -34,19 +36,25 @@ class LogMessageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('message')
-                    ->sortable()
-                    ->searchable(['message']),
-                TextColumn::make('context.url')
-                    ->label('URL')
-                    ->searchable(['url'])
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => new HtmlString('<span title="'.$state.'">'.Str::limit($state, 50).'</span>')
-                    ),
-                TextColumn::make('logged_at')
-                    ->sortable()
-                    ->dateTime(),
+                Split::make([
+                    Tables\Columns\Layout\Stack::make([
+                        TextColumn::make('message')
+                            ->sortable()
+                            ->searchable(['message']),
+                        TextColumn::make('context.url')
+                            ->label('URL')
+                            ->searchable(['url'])
+                            ->sortable()
+                            ->color('gray')
+                            ->formatStateUsing(fn ($state) => new HtmlString('<span title="'.$state.'">'.Str::limit($state, 50).'</span>')),
+                    ]),
+                    TextColumn::make('logged_at')
+                        ->sortable()
+                        ->dateTime()
+                        ->grow(false),
+                ])->from('md'),
             ])
+            ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
             ->filters([
                 //
             ])

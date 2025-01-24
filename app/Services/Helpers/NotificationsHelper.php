@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Helpers;
 
 use App\Enums\NotificationMethods;
 use App\Models\User;

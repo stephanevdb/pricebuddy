@@ -30,6 +30,9 @@ class UrlsTableWidget extends BaseWidget
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }
