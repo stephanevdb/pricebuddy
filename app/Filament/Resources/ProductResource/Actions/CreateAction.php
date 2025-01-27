@@ -15,6 +15,7 @@ class CreateAction extends Action
     {
         parent::setUp();
 
-        $this->resourceName('product');
+        $this->resourceName('product')
+            ->resourceUrl('create');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\Url;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -11,6 +12,37 @@ use Illuminate\Support\Sleep;
 class ProductSeeder extends Seeder
 {
     /**
+     * Dummy products to create. No scraping.
+     */
+    protected array $dummy = [
+        [
+            'title' => 'Amazon Echo Dot',
+            'urls' => [
+                'https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3' => ['49.99', '49.99', '39.99', '39.99', '59', '59', '49.99'],
+            ],
+            'image' => 'https://m.media-amazon.com/images/I/71yRY8YlAbL._AC_SX679_.jpg',
+        ],
+        [
+            'title' => 'Scott parer towels',
+            'urls' => [
+                'https://www.amazon.com/Scott-Towels-Choose-Sheet-Regular/dp/B0CT67D4JH/ref=sr_1_3' => ['19', '19', '29', '29', '35'],
+                'https://www.ebay.com/itm/365354442418' => ['39', '39', '29', '29', '29'],
+            ],
+            'image' => 'https://m.media-amazon.com/images/I/812-y3MIhmL._AC_SX679_PIbundle-2,TopRight,0,0_SH20_.jpg',
+        ],
+        [
+            'title' => 'Airpods 4',
+            'urls' => [
+                'https://www.amazon.com/Apple-Bluetooth-Headphones-Personalized-Effortless/dp/B0DGHMNQ5Z' => ['199', '199', '189', '189', '199'],
+                'https://www.ebay.com/itm/405476505625' => ['129', '129', '129', '129', '119'],
+            ],
+            'image' => 'https://m.media-amazon.com/images/I/61iBtxCUabL._AC_SX679_.jpg',
+        ],
+    ];
+
+    /**
+     * Real urls to create with scraping.
+     *
      * If item is array then it will be treated as a list of URLs for the same product.
      */
     protected array $urls = [
@@ -19,11 +51,7 @@ class ProductSeeder extends Seeder
             'https://www.liquorland.com.au/api/products/ll/vic/spirits/2614025',
             'https://www.danmurphys.com.au/product/DM_971412/sailor-jerry-the-original-spiced-rum-1l',
         ],
-        //        'https://api.bws.com.au/apis/ui/Product/907623',
-        //        'https://www.amazon.com.au/Patriot-Viper-Steel-DDR4-3600MHz/dp/B08N688HCH/ref=pd_ci_mcx_pspc_dp_d_2_i_1?pd_rd_w=AWO9k&content-id=amzn1.sym.c9d8026d-7c0e-4380-bf9e-ee6dc4550161&pf_rd_p=c9d8026d-7c0e-4380-bf9e-ee6dc4550161&pf_rd_r=8RMX785PNCSMKPNT7PNZ&pd_rd_wg=7AZSE&pd_rd_r=32a4235c-8e81-431b-a22b-15e7f2e72b3c&pd_rd_i=B08N688HCH&th=1',
-        //        'https://www.amazon.com.au/DJI-Mini-RC-Lightweight-Intelligent/dp/B0BL3T49JF/ref=mp_s_a_1_3?crid=39ZXJEG4CMKTI&dib=eyJ2IjoiMSJ9.eddax2xvF7uWbeqpQXhFrFnTWkeGWYkHTxM59e3OkqB_-wzSGIzCa5KnzZPto_ISCtdIKNngPOSbgffP2UggVAkyNQmXJsU498lYxxV9M0TVE6LaNy88PG3oncOUJ1cj7eilfpZ7YEdQFxODBbwtoigQ4XQr0SwLY9-nnWtT7Si60lUswOOEI0SflTFjDEwxjDJYnRejy17b-Dd8RbaYQg.AE5LEbbSuYpIer_QNpr32pxtqnyRorRLHSLJrNonxdY&dib_tag=se&keywords=dji%2Bmini%2B3%2Bfly%2Bmore%2Bcombo&qid=1736578748&sprefix=dji%2Bmini%2Bfl%2Caps%2C311&sr=8-3&th=1&psc=1',
-        //        'https://www.thegoodguys.com.au/dji-mini-4k-fly-more-combo-6333933',
-        //        'https://www.thegoodguys.com.au/dji-neo-fly-more-combo-6292316',
+        'https://www.thegoodguys.com.au/dji-neo-fly-more-combo-6292316',
         [
             'https://www.amazon.com.au/DJI-QuickShots-Stabilized-Propeller-Controller-Free/dp/B07FTPX71F?th=1',
             'https://www.thegoodguys.com.au/dji-neo-6292315',
@@ -36,6 +64,33 @@ class ProductSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
+    {
+        $this->runDummy();
+    }
+
+    public function runDummy(): void
+    {
+        $userId = User::oldest('id')->first()?->id ?? User::factory()->create()->id;
+
+        foreach ($this->dummy as $productData) {
+            $factory = Product::factory();
+
+            foreach ($productData['urls'] as $url => $prices) {
+                $factory = $factory->addUrlWithPrices($url, $prices);
+            }
+
+            /** @var Product $product */
+            $product = $factory->createOne([
+                'title' => $productData['title'],
+                'image' => $productData['image'],
+                'user_id' => $userId,
+            ]);
+
+            $product->updatePriceCache();
+        }
+    }
+
+    public function runReal(): void
     {
         $productModel = null;
         $userId = User::oldest('id')->first()?->id ?? User::factory()->create()->id;

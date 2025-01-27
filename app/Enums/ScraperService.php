@@ -30,7 +30,7 @@ enum ScraperService: string implements HasColor, HasDescription, HasLabel
         };
     }
 
-    public function getColor(): string|array|null
+    public function getColor(): array
     {
         return match ($this) {
             self::Http => Color::Blue,

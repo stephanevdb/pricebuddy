@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -107,6 +108,11 @@ class Product extends Model
             'id', // Local key on the product table...
             'store_id' // Local key on the stores table...
         );
+    }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     /***************************************************
@@ -229,7 +235,7 @@ class Product extends Model
     public function getPriceCache(): Collection
     {
         return collect($this->price_cache)
-            ->sortBy('price', false)
+            ->sortBy('price')
             ->map(fn ($price) => PriceCacheDto::fromArray($price))
             ->values();
     }
@@ -281,7 +287,7 @@ class Product extends Model
                     'history' => $storeHistory->toArray(),
                 ];
             })
-            ->sortBy('price', false)
+            ->sortBy('price')
             ->values();
     }
 
@@ -374,8 +380,9 @@ class Product extends Model
 
     public function shouldNotifyOnPrice(float $price): bool
     {
+
         // Check if price is less than notify price.
-        if (! empty($this->notify_price) && (float) $this->notify_price <= $price) {
+        if (! empty($this->notify_price) && $price <= (float) $this->notify_price) {
             return true;
         }
 

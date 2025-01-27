@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Store;
 use App\Models\Url;
 use App\Models\User;
+use App\Services\ScrapeUrl;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -33,6 +34,27 @@ class ProductFactory extends Factory
             'price_cache' => [],
             'user_id' => User::factory(),
         ];
+    }
+
+    public function addUrlWithPrices(string $url, array $prices): self
+    {
+        return $this->afterCreating(function (Product $product) use ($url, $prices) {
+            $store = ScrapeUrl::new($url)->getStore() ?? Store::factory()->forUrl($url)->createOne();
+
+            /** @var Url $url */
+            $url = $product->urls()->create([
+                'url' => $url,
+                'store_id' => $store->id,
+            ]);
+
+            foreach ($prices as $idx => $price) {
+                $url->prices()->create([
+                    'price' => $price,
+                    'store_id' => $store->id,
+                    'created_at' => Carbon::now()->subDays(count($prices) - $idx)->setTime(6, 0)->toDateTimeString(),
+                ]);
+            }
+        });
     }
 
     public function addUrlsAndPrices(int $urlCount = 3, int $priceCount = 3): self

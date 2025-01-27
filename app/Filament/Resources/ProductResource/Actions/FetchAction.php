@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ProductResource\Actions;
 use App\Models\Product;
 use Exception;
 use Filament\Actions\Action;
+use Illuminate\Support\Facades\Log;
 
 class FetchAction extends Action
 {
@@ -38,6 +39,7 @@ class FetchAction extends Action
 
                 $this->success();
             } catch (Exception $e) {
+                Log::channel('db')->error($e->getMessage());
                 $this->failure();
             }
         });

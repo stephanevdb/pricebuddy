@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Url;
 use App\Models\User;
 use App\Services\Helpers\NotificationsHelper;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification as DatabaseNotification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
@@ -49,6 +51,22 @@ class PriceAlertNotification extends Notification
             ->markdown('mail.price-change-notification', $this->toArray($notifiable));
     }
 
+    public function toDatabase($notifiable): array
+    {
+        return DatabaseNotification::make()
+            ->title($this->getTitle())
+            ->body($this->getSummary())
+            ->actions([
+                Action::make('view')
+                    ->url(parse_url($this->getUrl(), PHP_URL_PATH), false)
+                    ->label('View product'),
+                Action::make('buy')
+                    ->url($this->url->url, true)
+                    ->label('Buy'),
+            ])
+            ->getDatabaseMessage();
+    }
+
     /**
      * Get the array representation of the notification.
      *
@@ -66,7 +84,7 @@ class PriceAlertNotification extends Notification
             'productName' => Str::limit(($this->product->title ?? 'Unknown product'), 100),
             'imgUrl' => $this->product?->image,
             'newPrice' => $this->url->latest_price_formatted,
-            'averagePrice' => $this->product?->priceAggregates('avg'),
+            'averagePrice' => data_get($this->product?->price_aggregates, 'avg', '$0.00'),
         ];
     }
 

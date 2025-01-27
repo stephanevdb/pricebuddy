@@ -61,6 +61,7 @@ class LogMessageResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
             ])
+            ->defaultSort('logged_at', 'desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

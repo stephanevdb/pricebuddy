@@ -6,6 +6,7 @@ use App\Enums\Icons;
 use App\Filament\Actions\BaseAction;
 use App\Filament\Resources\ProductResource;
 use App\Filament\Resources\ProductResource\Widgets\UrlsTableWidget;
+use App\Models\Product;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -40,5 +41,13 @@ class EditProduct extends EditRecord
     public function getFooterWidgetsColumns(): int|array
     {
         return 1;
+    }
+
+    protected function afterUpdate(): void
+    {
+        /** @var Product $product */
+        $product = $this->record;
+
+        $product->tags()->sync($this->data['tags']);
     }
 }

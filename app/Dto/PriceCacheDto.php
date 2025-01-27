@@ -16,9 +16,9 @@ class PriceCacheDto
 
     private ?string $url;
 
-    private ?string $trend;
+    private string $trend;
 
-    private ?float $price;
+    private float $price;
 
     private array $history;
 

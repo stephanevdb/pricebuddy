@@ -79,8 +79,8 @@ class ScrapeUrl
                 $this->logger->error('Error scraping URL', [
                     'attempts' => $attempt,
                     'error' => 'Missing required field: '.$required,
-                    'scrape_errors' => $output['errors'],
-                    'scraped_html' => $output['body'],
+                    'scrape_errors' => $output['errors'] ?? [],
+                    'scraped_html' => $output['body'] ?? '',
                 ]);
                 $this->errorNotification('Missing required field: '.$required);
 

@@ -7,6 +7,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class UrlsTableWidget extends BaseWidget
 {
@@ -23,10 +25,18 @@ class UrlsTableWidget extends BaseWidget
                 $product->urls()->with('store')->getQuery()
             )
             ->columns([
-                Tables\Columns\TextColumn::make('store.name')
-                    ->label('Store'),
-                Tables\Columns\TextColumn::make('url')
-                    ->label('Url'),
+                Tables\Columns\Layout\Split::make([
+                    Tables\Columns\Layout\Stack::make([
+                        Tables\Columns\TextColumn::make('store.name')
+                            ->label('Store'),
+                        Tables\Columns\TextColumn::make('url')
+                            ->label('Url')
+                            ->color('gray')
+                            ->formatStateUsing(fn (string $state): HtmlString => new HtmlString('<a href="'.$state.'" title="'.$state.'" target="_blank">'.Str::limit($state, 80).'</a>')
+                            ),
+                    ]),
+                ]),
+
             ])
             ->actions([
                 Tables\Actions\DeleteAction::make(),

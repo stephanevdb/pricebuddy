@@ -10,6 +10,8 @@ use App\Providers\Filament\AdminPanelProvider;
 use App\Rules\StoreUrl;
 use App\Services\Helpers\CurrencyHelper;
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -88,6 +90,16 @@ class ProductResource extends Resource
                     ->preload()
                     ->hintIcon(Icons::Help->value, 'Only published products get price history')
                     ->native(false),
+
+                Select::make('tags')
+                    ->relationship('tags', 'name')
+                    ->createOptionForm([
+                        TextInput::make('name')->required(),
+                        Hidden::make('user_id')->default(auth()->id()),
+                    ])
+                    ->multiple()
+                    ->nullable()
+                    ->preload(),
             ])
                 ->columns(2)
                 ->description('Product info'),
@@ -134,12 +146,10 @@ class ProductResource extends Resource
                                 ->extraAttributes(['class' => 'pr-4'])
                                 ->url(fn (Product $record): string => $record->action_urls['view']),
 
-                            TextColumn::make('created_at')
-                                ->dateTime()
-                                ->sortable()
+                            TextColumn::make('tags')
                                 ->color(Color::Gray)
-                                ->formatStateUsing(fn ($record): string => 'Started watching '.$record->created_at->diffForHumans())
-                                ->label('Created at')
+                                ->formatStateUsing(fn ($record): string => $record->tags->pluck('name')->join(', '))
+                                ->label('Tags')
                                 ->url(null)
                                 ->grow(false),
                         ]),
@@ -190,6 +200,11 @@ class ProductResource extends Resource
                             $query->lowestPriceInDays($data['value']);
                         }
                     }),
+                SelectFilter::make('tags')
+                    ->relationship('tags', 'name')
+                    ->label('Tags')
+                    ->multiple()
+                    ->native(false),
             ])
             ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
             ->defaultSort('created_at', 'desc')
@@ -203,7 +218,7 @@ class ProductResource extends Resource
             ])
             ->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
-                $query->currentUser();
+                $query->currentUser()->with(['tags']);
             })
             ->recordUrl(null);
     }
