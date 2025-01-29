@@ -9,12 +9,12 @@ class CurrencyHelper
 {
     public static function getLocale(): string
     {
-        return config('app.faker_locale', 'en');
+        return config('app.currency_locale', 'en_US');
     }
 
     public static function getSymbol(?string $locale = null): string
     {
-        return (new NumberFormatter(self::getLocale(), NumberFormatter::CURRENCY))
+        return (new NumberFormatter($locale ?? self::getLocale(), NumberFormatter::CURRENCY))
             ->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
     }
 

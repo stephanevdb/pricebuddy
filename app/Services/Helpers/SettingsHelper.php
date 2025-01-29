@@ -23,7 +23,7 @@ class SettingsHelper
     public static function getSetting(string $name, $default = null)
     {
         try {
-            return data_get(static::getSettings(), $name);
+            return data_get(static::getSettings(), $name, $default);
         } catch (MissingSettings $e) {
             Log::error("Attempted to get missing setting: $name, you need to run the migrations");
 

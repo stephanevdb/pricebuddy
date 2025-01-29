@@ -6,11 +6,9 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum StatusEnum: string implements HasColor, HasIcon, HasLabel
+enum Statuses: string implements HasColor, HasIcon, HasLabel
 {
     case Published = 'p';
-    case Disabled = 'd';
-    case Silenced = 's';
     case Archived = 'a';
 
     public static function names(): array
@@ -31,7 +29,7 @@ enum StatusEnum: string implements HasColor, HasIcon, HasLabel
     public static function ignored(): array
     {
         return [
-            self::Disabled,
+            self::Archived,
         ];
     }
 
@@ -44,9 +42,7 @@ enum StatusEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Published => 'success',
-            self::Disabled => 'danger',
-            self::Silenced => 'warning',
-            self::Archived => 'info',
+            self::Archived => 'danger',
         };
     }
 
@@ -54,9 +50,7 @@ enum StatusEnum: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::Published => 'heroicon-o-check-circle',
-            self::Disabled => 'heroicon-o-exclamation-circle',
-            self::Silenced => 'heroicon-o-bell',
-            self::Archived => 'heroicon-o-archive',
+            self::Archived => 'heroicon-o-exclamation-circle',
         };
     }
 }

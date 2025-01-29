@@ -24,6 +24,8 @@ class ScrapeUrl
 
     protected string $scraperService = 'api';
 
+    protected int $maxAttempts = 3;
+
     protected array $keys = [
         'title',
         'description',
@@ -62,12 +64,16 @@ class ScrapeUrl
     public function scrape(array $options = []): array
     {
         $attempt = 0;
-        $maxAttempts = 3;
         $output = [];
 
-        while ($attempt < $maxAttempts) {
+        while ($attempt < $this->maxAttempts) {
             $attempt++;
             $output = $this->scrapeUrl($options);
+
+            if ($output === false) {
+                $attempt = $this->maxAttempts;
+                $output = [];
+            }
 
             if (! empty($output['title'])) {
                 break;
@@ -76,7 +82,7 @@ class ScrapeUrl
 
         foreach (['title', 'price'] as $required) {
             if (empty($output[$required])) {
-                $this->logger->error('Error scraping URL', [
+                $this->logger->error('Error scraping URL '.$attempt.' times', [
                     'attempts' => $attempt,
                     'error' => 'Missing required field: '.$required,
                     'scrape_errors' => $output['errors'] ?? [],
@@ -91,10 +97,18 @@ class ScrapeUrl
         return $output;
     }
 
-    protected function scrapeUrl(array $options = []): array
+    protected function scrapeUrl(array $options = []): array|false
     {
         $store = data_get($options, 'store') ?? $this->getStore();
         $useCache = data_get($options, 'use_cache', true);
+
+        if (! $store) {
+            $this->logger->error('No store found for URL');
+            $this->errorNotification('No store found for URL');
+
+            return false;
+        }
+
         $this->setScraper($store->scraper_service);
 
         $scraper = $this->webScraper->from($this->url)
@@ -110,7 +124,7 @@ class ScrapeUrl
 
         if ($errors = $scraper->getErrors()) {
             $this->logger->error('Error scraping URL', [
-                'store_id' => $store?->getKey(),
+                'store_id' => $store->getKey(),
                 'errors' => $errors,
             ]);
             $this->errorNotification('Error scraping URL check logs');
@@ -138,7 +152,7 @@ class ScrapeUrl
     {
         $host = Uri::of($this->url)->host();
 
-        return Store::whereJsonContains('domains', ['domain' => $host])->first();
+        return Store::whereJsonContains('domains', ['domain' => $host])->oldest()->first();
     }
 
     protected function scrapeOption(WebScraperInterface $scraper, array $options): ?string

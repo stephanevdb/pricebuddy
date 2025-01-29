@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\StatusEnum;
+use App\Enums\Statuses;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 1024);
             $table->string('image', 1024)->nullable();
-            $table->char('status', 1)->default(StatusEnum::Published->value);
+            $table->char('status', 1)->default(Statuses::Published->value);
             $table->float('notify_price')->nullable();
             $table->float('notify_percent')->nullable();
             $table->boolean('favourite')->default(false);

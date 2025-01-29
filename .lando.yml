@@ -120,6 +120,12 @@ services:
     overrides:
       ports:
         - 3000:3000
+  tests_db:
+    type: laravel-mysql
+    creds:
+      user: laravel
+      password: laravel
+      database: laravel
   phpmyadmin:
     type: phpmyadmin
     hosts:

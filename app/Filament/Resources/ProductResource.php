@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\Icons;
-use App\Enums\StatusEnum;
+use App\Enums\Statuses;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use App\Providers\Filament\AdminPanelProvider;
@@ -67,8 +67,8 @@ class ProductResource extends Resource
             ->rules([new StoreUrl]);
 
         return [
-            Forms\Components\Section::make('Url of the product')->schema($components)
-                ->description('Given the url we will scrape the product information'),
+            Forms\Components\Section::make(__('Url of the product'))->schema($components)
+                ->description(__('Given the url we will scrape the product information. Products and their urls are unique to your user account')),
         ];
     }
 
@@ -85,14 +85,18 @@ class ProductResource extends Resource
                     ->hintIcon(Icons::Help->value, 'The Image URL of the product'),
 
                 Forms\Components\Select::make('status')
-                    ->options(StatusEnum::class)
-                    ->default(StatusEnum::Published)
+                    ->options(Statuses::class)
+                    ->default(Statuses::Published)
                     ->preload()
                     ->hintIcon(Icons::Help->value, 'Only published products get price history')
                     ->native(false),
 
                 Select::make('tags')
-                    ->relationship('tags', 'name')
+                    ->relationship(
+                        'tags',
+                        'name',
+                        fn (Builder $query) => $query->where('user_id', auth()->id())
+                    )
                     ->createOptionForm([
                         TextInput::make('name')->required(),
                         Hidden::make('user_id')->default(auth()->id()),
@@ -183,7 +187,7 @@ class ProductResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->options(StatusEnum::class)
+                    ->options(Statuses::class)
                     ->label('Status')
                     ->native(false),
                 SelectFilter::make('lowest_in_period')

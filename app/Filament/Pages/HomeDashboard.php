@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Resources\ProductResource\Actions\CreateAction;
+use App\Filament\Widgets\ProductStats;
 use Filament\Facades\Filament;
 use Filament\Pages\Page;
 use Filament\Support\Facades\FilamentIcon;
@@ -45,7 +46,10 @@ class HomeDashboard extends Page
      */
     public function getWidgets(): array
     {
-        return Filament::getWidgets();
+        return [
+            ProductStats::class,
+        ];
+        // return Filament::getWidgets();
     }
 
     /**

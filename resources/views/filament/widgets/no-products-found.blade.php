@@ -3,12 +3,12 @@
         <h2 class="font-black text-2xl mb-5">
             {{ $heading }}
         </h2>
-        <p class="text-lg mb-6 text-gray-500 dark:text-gray-400">
+        <p class="text-md mb-6 text-gray-500 dark:text-gray-400">
             {{ $description }}
         </p>
         <x-filament::button
             tag="a"
-            icon="heroicon-m-pencil-square"
+            icon="heroicon-m-plus-circle"
             href="{{ $cta_url }}"
             size="lg"
         >

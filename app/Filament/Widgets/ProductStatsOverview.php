@@ -11,27 +11,30 @@ class ProductStatsOverview extends BaseWidget
 {
     protected static ?int $sort = 10;
 
-    public static function canView(): bool
+    public ?array $ids = null;
+
+    public function mount(?array $ids = null)
     {
-        return Product::published()->currentUser()->count() > 0;
+        $this->ids = $ids;
     }
 
     protected function getColumns(): int
     {
-        $count = count($this->getCachedStats());
-
-        if ($count <= 2) {
-            return 2;
-        }
-
         return 3;
     }
 
     protected function getStats(): array
     {
-        $products = Product::latest()
+        $products = Product::latest();
+
+        if (! is_null($this->ids)) {
+            $products->whereIn('id', $this->ids);
+        }
+
+        return $products
             ->currentUser()
             ->published()
+            ->with('tags')
             ->get()
             ->filter(fn (Product $product) => isset($product->price_cache[0]))
             ->map(function (Product $product) {
@@ -46,8 +49,8 @@ class ProductStatsOverview extends BaseWidget
                     )
                     ->color($lowest->getTrendColor())
                     ->url($product->action_urls['view']);
-            })->values();
-
-        return $products->toArray();
+            })
+            ->values()
+            ->toArray();
     }
 }

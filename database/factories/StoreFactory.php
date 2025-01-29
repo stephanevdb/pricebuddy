@@ -22,7 +22,9 @@ class StoreFactory extends Factory
         return [
             'name' => $this->faker->name,
             'initials' => '',
-            'domains' => [],
+            'domains' => [
+                ['domain' => 'example.com'],
+            ],
             'scrape_strategy' => [
                 'title' => [
                     'value' => 'meta[property=og:title]|content',
@@ -50,7 +52,7 @@ class StoreFactory extends Factory
         $titleParts = explode('.', str_replace('www.', '', $host));
 
         return $this->state(fn (array $attributes) => [
-            'title' => Str::title($titleParts[0] ?? $this->faker->word),
+            'name' => Str::title($titleParts[0] ?? $this->faker->word),
             'domains' => ['domain' => Uri::of($url)->host()],
         ]);
     }

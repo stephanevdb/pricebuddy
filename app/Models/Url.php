@@ -110,7 +110,7 @@ class Url extends Model
             $price = data_get($this->scrape(), 'price');
         }
 
-        if (is_null($price)) {
+        if (is_null($price) || $price === '') {
             return null;
         }
 

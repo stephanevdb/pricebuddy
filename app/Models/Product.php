@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Dto\PriceCacheDto;
-use App\Enums\StatusEnum;
+use App\Enums\Statuses;
 use App\Enums\Trend;
 use App\Filament\Actions\BaseAction;
 use App\Services\Helpers\CurrencyHelper;
@@ -47,7 +47,7 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'status' => StatusEnum::class,
+        'status' => Statuses::class,
         'price_cache' => 'array',
         'created_at' => 'datetime',
     ];
@@ -124,7 +124,7 @@ class Product extends Model
      */
     public function scopePublished(EloquentBuilder $query): EloquentBuilder
     {
-        return $query->where('status', StatusEnum::Published);
+        return $query->where('status', Statuses::Published);
     }
 
     /**
@@ -216,9 +216,9 @@ class Product extends Model
     {
         return $this->getKey()
             ? [
-                'edit' => route(BaseAction::ROUTE_NAMESPACE.'products.edit', $this),
-                'view' => route(BaseAction::ROUTE_NAMESPACE.'products.view', $this),
-                'fetch' => route(BaseAction::ROUTE_NAMESPACE.'products.fetch', $this),
+                'edit' => route(BaseAction::ROUTE_NAMESPACE.'products.edit', $this, false),
+                'view' => route(BaseAction::ROUTE_NAMESPACE.'products.view', $this, false),
+                'fetch' => route(BaseAction::ROUTE_NAMESPACE.'products.fetch', $this, false),
             ]
             : [];
     }
@@ -251,9 +251,9 @@ class Product extends Model
             $cache->filter(fn (PriceCacheDto $price) => $price->getUrlId() === $urlId);
         }
 
-        return $cache->map(fn (PriceCacheDto $price) => $price->getHistory()->values()->toArray())
+        return round($cache->map(fn (PriceCacheDto $price) => $price->getHistory()->values()->toArray())
             ->flatten()
-            ->{$method}();
+            ->{$method}(), 2);
     }
 
     /**
@@ -267,13 +267,13 @@ class Product extends Model
         return $urls
             ->map(function ($url) use ($history): array {
                 /** @var Url $url */
-                /** @var Collection $storeHistory */
-                $storeHistory = $history->get($url->getKey());
+                /** @var Collection $urlHistory */
+                $urlHistory = $history->get($url->getKey());
                 /** @var ?Store $store */
                 $store = $url->store;
 
                 // Build trend.
-                $lastTwo = $storeHistory->values()->reverse()->take(2)->values()->toArray();
+                $lastTwo = $urlHistory->values()->reverse()->take(2)->values()->toArray();
                 $trend = Trend::getTrendDirection($lastTwo);
 
                 // Build output. @todo replace with DTO
@@ -283,8 +283,8 @@ class Product extends Model
                     'url_id' => $url->getKey(),
                     'url' => $url->url,
                     'trend' => $trend,
-                    'price' => $storeHistory->last(),
-                    'history' => $storeHistory->toArray(),
+                    'price' => $urlHistory->last(),
+                    'history' => $urlHistory->toArray(),
                 ];
             })
             ->sortBy('price')
@@ -372,15 +372,14 @@ class Product extends Model
      */
     public function getPriceHistoryCached(): Collection
     {
-        return collect($this->price_cache)
-            ->mapWithKeys(fn ($price) => [
-                $price['store_id'] => collect($price['history']),
+        return $this->getPriceCache()
+            ->mapWithKeys(fn (PriceCacheDto $price) => [
+                $price->getUrlId() => $price->getHistory(),
             ]);
     }
 
     public function shouldNotifyOnPrice(float $price): bool
     {
-
         // Check if price is less than notify price.
         if (! empty($this->notify_price) && $price <= (float) $this->notify_price) {
             return true;
@@ -398,10 +397,10 @@ class Product extends Model
             }
 
             // Calculate percent.
-            $percent = ($price - $firstPrice) / $firstPrice * 100;
+            $notifyPrice = $firstPrice - ($firstPrice * ($this->notify_percent / 100));
 
             // Check if percent is greater than notify percent.
-            return $percent >= $this->notify_percent;
+            return $price <= $notifyPrice;
         }
 
         return false;

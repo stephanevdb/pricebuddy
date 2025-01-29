@@ -58,7 +58,7 @@ class StoreResource extends Resource
                         ->rules(['max:2']),
                 ])
                     ->columns(2)
-                    ->description('Store basic information')
+                    ->description(__('Stores are shared between all users in :name', ['name' => config('app.name')]))
                     ->live(),
 
                 Forms\Components\Section::make('Domains')->schema([

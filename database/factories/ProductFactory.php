@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\StatusEnum;
+use App\Enums\Statuses;
 use App\Models\Product;
 use App\Models\Store;
 use App\Models\Url;
@@ -26,7 +26,7 @@ class ProductFactory extends Factory
         return [
             'title' => $this->faker->sentence,
             'image' => $this->faker->imageUrl(),
-            'status' => StatusEnum::Published->value,
+            'status' => Statuses::Published->value,
             'notify_price' => $this->faker->randomFloat(2, 10, 100),
             'notify_percent' => $this->faker->randomFloat(2, 10, 100),
             'favourite' => $this->faker->boolean,
@@ -54,6 +54,8 @@ class ProductFactory extends Factory
                     'created_at' => Carbon::now()->subDays(count($prices) - $idx)->setTime(6, 0)->toDateTimeString(),
                 ]);
             }
+
+            $product->updatePriceCache();
         });
     }
 
@@ -88,5 +90,10 @@ class ProductFactory extends Factory
     public static function generateRandomPriceVariation(float $price, float $variationMax = 20): float
     {
         return $price + rand(($variationMax * -1), $variationMax);
+    }
+
+    public function setStatus(Statuses $status): self
+    {
+        return $this->state(fn () => ['status' => $status->value]);
     }
 }

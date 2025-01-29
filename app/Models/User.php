@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Filament\Panel\Concerns\HasNotifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $email
  * @property array $settings
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, HasNotifications, Notifiable;
@@ -67,5 +69,13 @@ class User extends Authenticatable
     public function routeNotificationForPushover()
     {
         return data_get($this->settings, 'notifications.pushover.user_key');
+    }
+
+    /**
+     * All users can access panel.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
     }
 }
