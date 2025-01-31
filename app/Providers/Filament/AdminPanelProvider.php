@@ -33,6 +33,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandLogo(fn () => view('filament.logo'))
+            ->favicon(asset('/favicon.ico'))
             ->login(Login::class)
             ->colors([
                 'primary' => self::PRIMARY_COLOR,

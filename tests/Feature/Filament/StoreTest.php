@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament;
+namespace Tests\Feature\Filament;
 
 use App\Enums\ScraperService;
 use App\Filament\Resources\StoreResource;

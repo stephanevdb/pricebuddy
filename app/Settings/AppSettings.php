@@ -12,6 +12,10 @@ class AppSettings extends Settings
 
     public int $sleep_seconds_between_scrape;
 
+    public int $log_retention_days;
+
+    public int $max_attempts_to_scrape;
+
     public array $notification_services;
 
     public static function new(): self

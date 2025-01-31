@@ -29,7 +29,10 @@ class ProductStats extends Widget
             ->with('tags')
             ->get()
             ->filter(fn (Product $product) => isset($product->price_cache[0]))
-            ->groupBy(fn (Product $product) => $product->tags->first()->name ?? 'Uncategorized')
+            ->groupBy(fn (Product $product) => $product->tags->count() > 0
+                ? $product->tags->pluck('name')->implode(', ')
+                : 'Uncategorized'
+            )
             ->map(fn (Collection $products, string $tagName) => [
                 'heading' => $tagName,
                 'stats' => $products->pluck('id')->toArray(),

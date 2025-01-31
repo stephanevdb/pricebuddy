@@ -9,6 +9,7 @@
         "php": "^8.4",
         "ext-intl": "*",
         "awcodes/filament-quick-create": "^3.6",
+        "fakerphp/faker": "^1.23",
         "filament/actions": "^3.2",
         "filament/filament": "^3.2",
         "filament/forms": "^3.2",
@@ -22,7 +23,6 @@
         "yoeriboven/laravel-log-db": "^1.4"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2",
         "laravel/pint": "^1.19",

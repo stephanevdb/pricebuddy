@@ -1,6 +1,6 @@
 <?php
 
-namespace Filament;
+namespace Tests\Feature\Filament;
 
 use App\Enums\Statuses;
 use App\Filament\Resources\ProductResource;

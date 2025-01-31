@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\ScraperService;
 use App\Models\Store;
+use App\Services\Helpers\SettingsHelper;
 use App\Settings\AppSettings;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class ScrapeUrl
 
     protected string $scraperService = 'api';
 
-    protected int $maxAttempts = 3;
+    protected int $maxAttempts;
 
     protected array $keys = [
         'title',
@@ -37,6 +38,7 @@ class ScrapeUrl
     {
         // @phpstan-ignore-next-line - withContext is valid.
         $this->logger = Log::channel('db')->withContext(['url' => $url]);
+        $this->maxAttempts = SettingsHelper::getSetting('max_attempts_to_scrape', 3);
     }
 
     public static function new(string $url): self
@@ -52,7 +54,7 @@ class ScrapeUrl
         if ($this->scraperService === ScraperService::Api->value) {
             /** @var WebScraperApi $scraper */
             $scraper->setScraperApiBaseUrl(
-                config('price_scraper.scraper_api_url', 'http://scraper:3000')
+                config('price_buddy.scraper_api_url', 'http://scraper:3000')
             );
         }
 

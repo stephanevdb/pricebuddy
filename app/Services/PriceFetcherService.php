@@ -16,7 +16,7 @@ class PriceFetcherService
 
     public function __construct()
     {
-        $this->config = config('price_scraper');
+        $this->config = config('price_buddy');
     }
 
     public static function new(): self

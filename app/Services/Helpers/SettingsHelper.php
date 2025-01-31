@@ -3,6 +3,7 @@
 namespace App\Services\Helpers;
 
 use App\Settings\AppSettings;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelSettings\Exceptions\MissingSettings;
@@ -13,11 +14,15 @@ class SettingsHelper
 
     public static function getSettings(): array
     {
-        return static::$settings ??
-            (Schema::hasTable('settings')
-                ? AppSettings::new()->toArray()
-                : []
-            );
+        try {
+            return static::$settings ??
+                (config('app.key') && Schema::hasTable('settings')
+                    ? AppSettings::new()->toArray()
+                    : []
+                );
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     public static function getSetting(string $name, $default = null)

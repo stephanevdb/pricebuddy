@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Yoeriboven\LaravelLogDb\Models\LogMessage;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,9 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule) {
-        // When to check for new prices
+        // Check for new prices
         $schedule->command(ScraperFetchAll::COMMAND, ['--log'])
             ->dailyAt(SettingsHelper::getSetting('scrape_schedule_time', '06:00'));
+        // Prune old log messages
+        $schedule->command('model:prune', ['--model' => [LogMessage::class]])->daily();
     })
     ->withMiddleware(function (Middleware $middleware) {
         //

@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,12 +40,6 @@ return [
             'busy_timeout' => null,
             'journal_mode' => null,
             'synchronous' => null,
-        ],
-
-        'sqlite_testing' => [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
         ],
 
         'mysql' => [

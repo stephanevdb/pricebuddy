@@ -24,6 +24,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 
 class StoreResource extends Resource
@@ -139,14 +140,20 @@ class StoreResource extends Resource
                         ->sortable()
                         ->weight(FontWeight::Bold)
                         ->description(fn (Store $record): HtmlString => $record->domains_html),
+                    TextColumn::make('products_count')
+                        ->sortable()
+                        ->formatStateUsing(fn (string $state) => $state.' products')
+                        ->extraAttributes(['class' => 'min-w-36 md:flex md:justify-end pr-4'])
+                        ->grow(false),
                     TextColumn::make('settings.scraper_service')
                         ->label('Scraper')
                         ->badge()
                         ->sortable()
+                        ->extraAttributes(['class' => 'min-w-16'])
                         ->formatStateUsing(fn (string $state) => strtoupper($state))
                         ->color(fn (Store $record): array => ScraperService::tryFrom($record->scraper_service)->getColor())
                         ->grow(false),
-                ]),
+                ])->from('sm'),
 
             ])
             ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
@@ -163,7 +170,10 @@ class StoreResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->modifyQueryUsing(function (Builder $query) {
+                $query->withCount('products');
+            });
     }
 
     public static function getRelations(): array

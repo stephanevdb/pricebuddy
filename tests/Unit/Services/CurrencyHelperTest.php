@@ -1,6 +1,6 @@
 <?php
 
-namespace Services;
+namespace Tests\Unit\Services;
 
 use App\Services\Helpers\CurrencyHelper;
 use Tests\TestCase;

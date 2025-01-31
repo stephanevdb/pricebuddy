@@ -95,7 +95,7 @@ services:
         context: .
         dockerfile: docker/php.dockerfile
     services:
-      command: /app-entrypoint.sh
+      command: /start-app.sh
     scanner:
       retry: 2
   scraper:

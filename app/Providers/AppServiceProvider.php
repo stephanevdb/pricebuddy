@@ -6,6 +6,7 @@ use App\Enums\NotificationMethods;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
 use App\Services\Helpers\NotificationsHelper;
+use App\Services\Helpers\SettingsHelper;
 use Filament\Facades\Filament;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Facades\FilamentView;
@@ -37,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
-            fn (): string => Blade::render('@vite(\'resources/scss/app.scss\')'),
+            fn (): string => Blade::render('@vite(\'resources/scss/app.scss\')<link rel="manifest" href="/manifest.json">'),
         );
 
         Filament::registerUserMenuItems([
@@ -69,5 +70,10 @@ class AppServiceProvider extends ServiceProvider
                 'services.pushover.token' => NotificationsHelper::getSetting($pushover, 'token'),
             ]);
         }
+
+        // Logging.
+        config([
+            'logging.channels.db.days' => SettingsHelper::getSetting('log_retention_days', 7),
+        ]);
     }
 }

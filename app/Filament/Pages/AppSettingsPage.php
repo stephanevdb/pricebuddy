@@ -53,10 +53,33 @@ class AppSettingsPage extends SettingsPage
                             ->numeric()
                             ->minValue(1)
                             ->required(),
-
+                        TextInput::make('max_attempts_to_scrape')
+                            ->label('Max scrape attempts')
+                            ->hintIcon(Icons::Help->value, 'How many times to attempt to scrape a page before giving up')
+                            ->numeric()
+                            ->minValue(1)
+                            ->required(),
                     ]),
 
-                self::makeFormHeading('Notification Settings'),
+                Section::make('Logging')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\Select::make('log_retention_days')
+                            ->label('Log retention days')
+                            ->options([
+                                7 => '7 days',
+                                14 => '14 days',
+                                30 => '30 days',
+                                90 => '90 days',
+                                180 => '180 days',
+                                365 => '365 days',
+                            ])
+                            ->hintIcon(Icons::Help->value, 'How many days to keep logs for')
+                            ->required(),
+                    ]),
+
+                self::makeFormHeading('Notifications'),
+
                 $this->getEmailSettings(),
                 $this->getPushoverSettings(),
             ]);

@@ -12,6 +12,9 @@ return new class extends SettingsMigration
         $this->migrator->add('app.scrape_schedule_time', '06:00');
         $this->migrator->add('app.scrape_cache_ttl', 720);
         $this->migrator->add('app.sleep_seconds_between_scrape', 10);
+        $this->migrator->add('app.log_retention_days', 30);
+        $this->migrator->add('app.max_attempts_to_scrape', 3);
+        $this->migrator->add('app.notification_services', []);
     }
 
     /**
@@ -22,5 +25,8 @@ return new class extends SettingsMigration
         $this->migrator->delete('app.scrape_schedule_time');
         $this->migrator->delete('app.scrape_cache_ttl');
         $this->migrator->delete('app.sleep_seconds_between_scrape');
+        $this->migrator->delete('app.log_retention_days');
+        $this->migrator->delete('app.max_attempts_to_scrape');
+        $this->migrator->delete('app.notification_services');
     }
 };
