@@ -215,10 +215,60 @@ return [
         ],
         'user_id' => 1,
     ],
+    [
+        'name' => 'Coles AU',
+        'initials' => 'CO',
+        'slug' => 'coles-au',
+        'domains' => [
+            ['domain' => 'coles.com.au'],
+            ['domain' => 'www.coles.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '.price__value',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
+            ],
+        ],
+        'user_id' => 1,
+    ],
+    [
+        'name' => 'Woolworths AU',
+        'initials' => 'WW',
+        'domains' => [
+            ['domain' => 'woolworths.com.au'],
+            ['domain' => 'www.woolworths.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '.price-parts',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
+            ],
+        ],
+        'settings' => [
+            'scraper_service' => ScraperService::Api->value,
+            'scraper_service_settings' => '',
+        ],
+    ],
 
     // Liquor.
     [
-        'name' => 'BWS',
+        'name' => 'BWS API',
         'domains' => [
             ['domain' => 'api.bws.com.au'],
         ],
@@ -240,24 +290,54 @@ return [
         ],
     ],
     [
+        'name' => 'BWS',
+        'domains' => [
+            ['domain' => 'bws.com.au'],
+            ['domain' => 'www.bws.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => '.detail-item_brand',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '.trolley-controls_volume_price--dollars',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => '.product-image',
+                'type' => 'selector',
+            ],
+        ],
+        'settings' => [
+            'scraper_service' => ScraperService::Api->value,
+            'scraper_service_settings' => '',
+        ],
+    ],
+    [
         'name' => 'Liquorland',
         'initials' => 'LL',
         'domains' => [
+            ['domain' => 'liquorland.com.au'],
             ['domain' => 'www.liquorland.com.au'],
         ],
         'scrape_strategy' => [
             'title' => [
-                'value' => 'product.name',
-                'type' => 'json',
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
             ],
             'price' => [
-                'value' => 'product.price.current',
-                'type' => 'json',
+                'value' => '.FormattedAmount',
+                'type' => 'selector',
             ],
             'image' => [
-                'value' => 'product.image.thumbnailImage-missing',
-                'type' => 'json',
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
             ],
+        ],
+        'settings' => [
+            'scraper_service' => ScraperService::Api->value,
+            'scraper_service_settings' => '',
         ],
     ],
     [
