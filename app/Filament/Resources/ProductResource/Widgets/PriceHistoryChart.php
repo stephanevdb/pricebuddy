@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ProductResource\Widgets;
 
 use App\Models\Product;
-use App\Models\Store;
+use App\Models\Url;
 use App\Providers\Filament\AdminPanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\ChartWidget;
@@ -31,18 +31,20 @@ class PriceHistoryChart extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
+    protected static ?string $pollingInterval = null;
+
     protected function getData(): array
     {
         $history = $this->record->getPriceHistoryCached();
 
         $datasets = [];
 
-        $stores = Store::findMany($history->keys())->values();
+        $urls = Url::findMany($history->keys())->values();
 
-        foreach ($stores as $idx => $store) {
+        foreach ($urls as $idx => $url) {
             $datasets[] = [
-                'label' => $store->name,
-                'data' => $history->get($store->id),
+                'label' => $url->store?->name,
+                'data' => $history->get($url->id),
                 'backgroundColor' => 'rgba('.$this->getDatasetColor($idx).', 0.4)',
                 'borderColor' => 'rgba('.$this->getDatasetColor($idx).', 0.9)',
                 'fill' => true,

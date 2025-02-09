@@ -118,6 +118,103 @@ return [
         ],
         'user_id' => 1,
     ],
+    [
+        'name' => 'Officeworks',
+        'initials' => 'OW',
+        'slug' => 'officeworks-au',
+        'domains' => [
+            ['domain' => 'officeworks.com.au'],
+            ['domain' => 'www.officeworks.com.au'],
+            ['domain' => 'api.officeworks.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'title',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '~\"edlpPrice\":\"(.*?)\"~',
+                'type' => 'regex',
+            ],
+            'image' => [
+                'value' => '~\"image\":\"(.*?)\"~',
+                'type' => 'regex',
+            ],
+        ],
+        'user_id' => 1,
+    ],
+    [
+        'name' => 'Target AU',
+        'initials' => 'TA',
+        'slug' => 'target-au',
+        'domains' => [
+            ['domain' => 'target.com.au'],
+            ['domain' => 'www.target.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '~\"valueString\"\:\"(.*?)\"~',
+                'type' => 'regex',
+            ],
+            'image' => [
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
+            ],
+        ],
+        'user_id' => 1,
+    ],
+    [
+        'name' => 'Bunnings',
+        'initials' => 'BU',
+        'slug' => 'bunnings-au',
+        'domains' => [
+            ['domain' => 'bunnings.com.au'],
+            ['domain' => 'www.bunnings.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '[data-locator="product-price"]',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
+            ],
+        ],
+        'user_id' => 1,
+    ],
+    [
+        'name' => 'Big W',
+        'initials' => 'BW',
+        'slug' => 'big-w-au',
+        'domains' => [
+            ['domain' => 'bigw.com.au'],
+            ['domain' => 'www.bigw.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'meta[property=og:title]|content',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '[data-testid="price-value"]',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => 'meta[property=og:image]|content',
+                'type' => 'selector',
+            ],
+        ],
+        'user_id' => 1,
+    ],
 
     // Liquor.
     [

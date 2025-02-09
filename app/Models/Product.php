@@ -36,6 +36,9 @@ use Illuminate\Support\Str;
  * @property ?User $user
  * @property int $user_id
  * @property array $price_aggregates
+ * @property array $urls_array
+ * @property array $ignored_urls
+ * @property array $ignored_search_urls
  */
 class Product extends Model
 {
@@ -48,6 +51,7 @@ class Product extends Model
 
     protected $casts = [
         'status' => Statuses::class,
+        'ignored_urls' => 'array',
         'price_cache' => 'array',
         'created_at' => 'datetime',
     ];
@@ -198,6 +202,26 @@ class Product extends Model
     {
         return Attribute::make(
             get: fn () => $this->title(20)
+        );
+    }
+
+    /**
+     * Get urls array.
+     */
+    public function urlsArray(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->urls->pluck('url')->toArray()
+        );
+    }
+
+    /**
+     * Get urls array.
+     */
+    public function ignoredSearchUrls(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => collect($this->ignored_urls)->merge($this->urls_array)->unique()->values()->toArray()
         );
     }
 

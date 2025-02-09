@@ -3,11 +3,14 @@
 namespace App\Filament\Resources\StoreResource\Pages;
 
 use App\Filament\Resources\StoreResource;
+use App\Filament\Resources\StoreResource\Pages\Traits\TestAfterEdit;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditStore extends EditRecord
 {
+    use TestAfterEdit;
+
     protected static string $resource = StoreResource::class;
 
     protected function getHeaderActions(): array
@@ -21,8 +24,17 @@ class EditStore extends EditRecord
         ];
     }
 
-    protected function getRedirectUrl(): string
+    protected function getFormActions(): array
     {
-        return $this->getResource()::getUrl('index');
+        return [
+            $this->getSaveFormAction(),
+            $this->getSaveAndTestAction(__('Save & test')),
+        ];
+    }
+
+    public function saveAndTest(): void
+    {
+        $this->testAfterCreate = true;
+        $this->save();
     }
 }

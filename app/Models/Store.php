@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Enums\ScraperService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
@@ -84,6 +86,24 @@ class Store extends Model
     }
 
     /***************************************************
+     * Scopes.
+     **************************************************/
+
+    public function scopeDomainFilter(Builder $query, string|array $domains): Builder
+    {
+        $domains = Arr::wrap($domains);
+        $first = array_shift($domains);
+
+        return $query->where(function (Builder $subQuery) use ($first, $domains) {
+            $subQuery->whereJsonContains('domains', ['domain' => $first]);
+
+            foreach ($domains as $domain) {
+                $subQuery->orWhereJsonContains('domains', ['domain' => $domain]);
+            }
+        });
+    }
+
+    /***************************************************
      * Attributes.
      **************************************************/
 
@@ -139,5 +159,23 @@ class Store extends Model
                     ->toArray();
             }
         );
+    }
+
+    public function testUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => data_get($this->settings, 'test_url', ''),
+        );
+    }
+
+    /***************************************************
+     * Helpers.
+     **************************************************/
+
+    public function hasDomain($domain): bool
+    {
+        return collect($this->domains)
+            ->pluck('domain')
+            ->contains($domain);
     }
 }

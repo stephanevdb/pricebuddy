@@ -13,6 +13,8 @@ class ProductUrlStats extends BaseWidget
 
     public Model|Product|null $record = null;
 
+    protected static ?string $pollingInterval = null;
+
     protected function getColumns(): int
     {
         return 1;

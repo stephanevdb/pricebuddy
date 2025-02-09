@@ -27,8 +27,8 @@
     ]);
 
     $firstCardValueStyle = $idx === 0
-        ? 'text-4xl font-bold tracking-tight text-gray-950 dark:text-white'
-        : 'text-3xl font-semibold tracking-tight text-gray-500 dark:text-gray-400';
+        ? 'text-2xl md:text-4xl font-bold tracking-tight text-gray-950 dark:text-white'
+        : 'text-xl md:text-3xl font-semibold tracking-tight text-gray-500 dark:text-gray-400';
 
     $wrapperStyle = $idx === 0
         ? 'p-6 px-5'

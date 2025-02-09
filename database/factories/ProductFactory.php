@@ -32,6 +32,7 @@ class ProductFactory extends Factory
             'favourite' => $this->faker->boolean,
             'only_official' => $this->faker->boolean,
             'price_cache' => [],
+            'ignored_urls' => [],
             'user_id' => User::factory(),
         ];
     }

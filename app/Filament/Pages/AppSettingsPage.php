@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Enums\Icons;
+use App\Enums\IntegratedServices;
 use App\Enums\NotificationMethods;
 use App\Filament\Traits\FormHelperTrait;
 use App\Settings\AppSettings;
@@ -19,6 +20,8 @@ class AppSettingsPage extends SettingsPage
 
     const NOTIFICATION_SERVICES_KEY = 'notification_services';
 
+    const INTEGRATED_SERVICES_KEY = 'integrated_services';
+
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static ?string $title = 'Settings';
@@ -34,6 +37,7 @@ class AppSettingsPage extends SettingsPage
         return $form
             ->schema([
                 Section::make('Scrape Settings')
+                    ->description(__('Settings for scraping'))
                     ->columns(2)
                     ->schema([
                         Forms\Components\TimePicker::make('scrape_schedule_time')
@@ -62,6 +66,7 @@ class AppSettingsPage extends SettingsPage
                     ]),
 
                 Section::make('Logging')
+                    ->description(__('Settings for logging'))
                     ->columns(2)
                     ->schema([
                         Forms\Components\Select::make('log_retention_days')
@@ -82,6 +87,10 @@ class AppSettingsPage extends SettingsPage
 
                 $this->getEmailSettings(),
                 $this->getPushoverSettings(),
+
+                self::makeFormHeading('Integrations'),
+
+                $this->getSearXngSettings(),
             ]);
     }
 
@@ -108,7 +117,8 @@ class AppSettingsPage extends SettingsPage
                     ->password()
                     ->label('SMTP Password')
                     ->hintIcon(Icons::Help->value, 'The optional password for the SMTP server'),
-            ]
+            ],
+            __('SMTP settings for sending emails')
         );
     }
 
@@ -123,7 +133,30 @@ class AppSettingsPage extends SettingsPage
                     ->label('Pushover token')
                     ->hint(new HtmlString('<a href="https://pushover.net/apps/build" target="_blank">Create an application</a>'))
                     ->required(),
-            ]
+            ],
+            __('Push notifications via Pushover')
+        );
+    }
+
+    protected function getSearXngSettings(): Section
+    {
+        return self::makeSettingsSection(
+            'SearXng',
+            self::INTEGRATED_SERVICES_KEY,
+            IntegratedServices::SearXng->value,
+            [
+                TextInput::make('url')
+                    ->label('SearXng url')
+                    ->placeholder('https://searxng.homelab.com/search')
+                    ->hint(new HtmlString('Url of your <a href="https://searxng.org/" target="_blank">SearXng</a> instance, including the search path'))
+                    ->required(),
+                TextInput::make('search_prefix')
+                    ->label('Search prefix')
+                    ->placeholder('Buy')
+                    ->hint(new HtmlString('Text to prepend to the product name when searching'))
+                    ->required(),
+            ],
+            'Automatically search for additional products urls'
         );
     }
 }

@@ -9,6 +9,7 @@
         "php": "^8.4",
         "ext-intl": "*",
         "awcodes/filament-quick-create": "^3.6",
+        "calebporzio/sushi": "^2.5",
         "fakerphp/faker": "^1.23",
         "filament/actions": "^3.2",
         "filament/filament": "^3.2",

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource;
 use App\Models\Url;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateProduct extends CreateRecord
@@ -22,5 +23,20 @@ class CreateProduct extends CreateRecord
         $urlModel = Url::createFromUrl($url, $productId, auth()->id());
 
         return $urlModel->product;
+    }
+
+    public function getFooterWidgetsColumns(): int|array
+    {
+        return 1;
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
+            ProductResource\Widgets\CreateViaSearchForm::class,
+            //            new WidgetConfiguration(ProductResource\Widgets\CreateViaSearchTable::class, [
+            //                'searchQuery' => null
+            //            ]),
+        ];
     }
 }

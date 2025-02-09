@@ -27,7 +27,8 @@ class TestStore extends EditRecord
                     ->model($this->getRecord())
                     ->statePath($this->getFormStatePath())
                     ->columns($this->hasInlineLabels() ? 1 : 2)
-                    ->inlineLabel($this->hasInlineLabels()),
+                    ->inlineLabel($this->hasInlineLabels())
+                    ->fill(),
             )),
         ];
     }
@@ -38,9 +39,11 @@ class TestStore extends EditRecord
 
         /** @var Store $store */
         $store = $this->getRecord();
-        $url = data_get($this->data, 'url', '');
+        $url = data_get($this->data, 'test_url', '');
 
         $scrape = ScrapeUrl::new($url)->scrape(['store' => $store, 'use_cache' => false]);
+
+        $store->update(['settings' => array_merge($store->settings, ['test_url' => $url])]);
 
         session()->put('test_scrape', $scrape);
     }

@@ -110,7 +110,7 @@ class StoreResource extends Resource
     {
         return $form->schema([
             Forms\Components\Section::make('Test url scrape')->schema([
-                TextInput::make('url')
+                TextInput::make('test_url')
                     ->label('Product URL')
                     ->hintIcon(Icons::Help->value, 'The URL to scrape')
                     ->required()

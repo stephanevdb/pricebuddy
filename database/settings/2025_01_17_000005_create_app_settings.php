@@ -15,6 +15,7 @@ return new class extends SettingsMigration
         $this->migrator->add('app.log_retention_days', 30);
         $this->migrator->add('app.max_attempts_to_scrape', 3);
         $this->migrator->add('app.notification_services', []);
+        $this->migrator->add('app.integrated_services', []);
     }
 
     /**
@@ -28,5 +29,6 @@ return new class extends SettingsMigration
         $this->migrator->delete('app.log_retention_days');
         $this->migrator->delete('app.max_attempts_to_scrape');
         $this->migrator->delete('app.notification_services');
+        $this->migrator->delete('app.integrated_services');
     }
 };

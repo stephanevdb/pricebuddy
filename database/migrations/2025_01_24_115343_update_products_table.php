@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->float('current_price')->comment('Lowest cache')->nullable()->after('status');
+            $table->json('ignored_urls')->nullable()->after('price_cache');
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('current_price');
+            $table->dropColumn('ignored_urls');
         });
     }
 };

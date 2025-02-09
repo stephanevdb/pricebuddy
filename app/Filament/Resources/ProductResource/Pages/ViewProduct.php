@@ -16,19 +16,11 @@ class ViewProduct extends ViewRecord
 {
     protected static string $resource = ProductResource::class;
 
-    protected static string $view = 'filament.pages.product.view';
+    protected static string $view = 'filament.resources.product-resource.pages.view';
 
     public function getTitle(): string|Htmlable
     {
         return $this->record->title;
-    }
-
-    public function getFooterWidgetsColumns(): int|array
-    {
-        return [
-            'sm' => 1,
-            'xl' => 1,
-        ];
     }
 
     protected function getHeaderActions(): array
@@ -41,5 +33,18 @@ class ViewProduct extends ViewRecord
                 ->resourceName('product')
                 ->resourceUrl('edit', $this->record),
         ];
+    }
+
+    //    protected function getFooterWidgets(): array
+    //    {
+    //        return [
+    //            ProductResource\Widgets\UrlsTableWidget::class,
+    //            ProductResource\Widgets\ProductSearch::class,
+    //        ];
+    //    }
+
+    public function getFooterWidgetsColumns(): int|array
+    {
+        return 1;
     }
 }
