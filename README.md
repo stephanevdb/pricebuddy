@@ -27,13 +27,13 @@ retailers.
 ## Screenshots
 
 Dashboard
-![Dashboard](docs/images/dashboard.png)
+![Dashboard](docs/docs/.vuepress/public/screenshots/dashboard.png)
 
 Product overview
-![Product](docs/images/product.png)
+![Product](docs/docs/.vuepress/public/screenshots/product.png)
 
 Product history
-![History](docs/images/history.png)
+![History](docs/docs/.vuepress/public/screenshots/history.png)
 
 ## Inspiration
 

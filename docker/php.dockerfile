@@ -4,7 +4,13 @@ FROM node:20 as frontend
 
 WORKDIR /app
 COPY ../.. /app
-RUN npm install && npm run build
+
+RUN npm install && \
+    npm run build && \
+    cd docs && \
+    npm install && \
+    npm run docs:build
+
 
 FROM php:${PHP_VERSION}-apache-bookworm
 
@@ -39,6 +45,7 @@ COPY --from=composer/composer:2-bin /composer /usr/bin/composer
 
 COPY ../.. /app
 COPY --from=frontend /app/public/build /app/public/build
+COPY --from=frontend /app/docs/docs/.vuepress/dist /app/public/docs
 
 COPY ../../docker/php/php.ini /usr/local/etc/php/conf.d/zzz-php-overrides.ini
 COPY ../../docker/php/schedule-cron /etc/cron.d/schedule-cron

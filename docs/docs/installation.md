@@ -1,0 +1,58 @@
+# Installation
+
+The recommended way to install PriceBuddy is via Docker. This will ensure that all 
+dependencies are installed and configured correctly. A `docker-compose.yml` file is
+provided to make this easy.
+
+## Quick start
+
+```shell
+mkdir pricebuddy
+cd pricebuddy
+wget https://raw.githubusercontent.com/jez500/pricebuddy/main/docker-compose.yml
+docker compose up -d
+```
+
+Then visit `http://localhost:8080` in your browser. The default username is 
+`admin@example.com` and the default password is `admin`.
+
+## Database
+
+The docker compose file includes a mysql database. You can use an external database if
+you prefer, see [Laravel documentation](https://laravel.com/docs/11.x/database#introduction)
+for supported databases. 
+
+Note `sqllite` is not supported due to the use of `json` columns.
+
+## Persistent storage / volumes
+
+The docker compose file includes volumes for the database and the app. Not much is 
+stored in the app volume so it won't need a lot of space.
+
+## Environment variables
+
+You can refer to [.env.example](https://github.com/laravel/laravel/blob/11.x/.env.example)
+file for the environment variables that can be set.
+
+If you just use the variables set in the docker compose file, you should be good to go.
+
+## Debugging install
+
+The `docker-compose.yml` file has been tested to get you up and running quickly. It 
+should create a `.env` file and setup the database schema, add default content and
+users.
+
+If you have any issues, you can run the following commands to see what is happening:
+
+```shell
+docker compose exec -it cat /app/storage/logs/laravel.log
+```
+
+You can also enable debugging via environment variables:
+
+```shell
+APP_ENV=local
+APP_DEBUG=true
+```
+
+

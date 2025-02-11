@@ -10,13 +10,13 @@ services:
         volumes:
             - storage:/app/storage
         environment:
-            DB_HOST: database
-            DB_USERNAME: pricebuddy
-            DB_PASSWORD: pric3buddy
-            DB_DATABASE: pricebuddy
-            APP_USER_EMAIL: admin@example.com
-            APP_USER_PASSWORD: admin
-            SCRAPER_BASE_URL: http://scraper:3000
+            DB_HOST: database                       # Name of the database service
+            DB_USERNAME: pricebuddy                 # Should match the MYSQL_USER in the database service
+            DB_PASSWORD: pric3buddy                 # Should match the MYSQL_PASSWORD in the database service
+            DB_DATABASE: pricebuddy                 # Should match the MYSQL_DATABASE in the database service
+            APP_USER_EMAIL: admin@example.com       # Only used for seeding the database
+            APP_USER_PASSWORD: admin                # Only used for seeding the database
+            SCRAPER_BASE_URL: http://scraper:3000   # Url to Name of the scrapper service
         depends_on:
             - database
         networks:
