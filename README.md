@@ -5,6 +5,10 @@ to compare prices of products from different online retailers. Users can search
 for a product and view the prices of that product from different online 
 retailers.
 
+## Docs
+
+[Read the docs](https://pricebuddy.jez.me?ref=pb-gh) for all the details.
+
 ## Features
 
 * Create and manage stores, you should be able to fetch products from almost any
