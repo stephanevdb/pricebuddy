@@ -9,7 +9,7 @@
         "directory": "./docs/docs/.vuepress/dist"
     },
     "build": {
-        "command": "npm run docs:build",
+        "command": "npm install -D sass-embedded && npm run docs:build",
         "cwd": "./docs"
     }
 }
