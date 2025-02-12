@@ -24,7 +24,7 @@ the environment variable `AFFILIATE_ENABLED=false`.
 If you want to support me directly, you can buy me a coffee. I love coffee,
 and it's ridiculously expensive these days.
 
-👉 **[Buy me a coffee ☕](https://www.paypal.com/donate/?business=ZCGV976794JHE&no_recurring=0&item_name=Buy+me+a+coffee&currency_code=AUD)**
+👉 **[Buy me a coffee ☕](https://www.paypal.com/donate/?business=ZCGV976794JHE&no_recurring=0&item_name=Buy+me+a+coffee&currency_code=USD)**
 
 ## Contribute
 
