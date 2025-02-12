@@ -35,14 +35,6 @@ class ViewProduct extends ViewRecord
         ];
     }
 
-    //    protected function getFooterWidgets(): array
-    //    {
-    //        return [
-    //            ProductResource\Widgets\UrlsTableWidget::class,
-    //            ProductResource\Widgets\ProductSearch::class,
-    //        ];
-    //    }
-
     public function getFooterWidgetsColumns(): int|array
     {
         return 1;

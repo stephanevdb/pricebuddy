@@ -122,7 +122,7 @@ class SearchResultUrl extends Model
             return [
                 'title' => $result['title'],
                 'url' => $result['url'],
-                'snippet' => $result['content'],
+                'snippet' => $result['content'] ?? null,
                 'thumbnail' => $result['thumbnail'] ?? null,
                 'domain' => parse_url($result['url'], PHP_URL_HOST),
                 'relevance' => $idx,

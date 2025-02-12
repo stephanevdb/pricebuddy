@@ -13,7 +13,7 @@
     <div class="auth-page h-full flex self-stretch w-full justify-stretch">
 
         <div
-            class="fi-simple-main-ctn md:w-1/2 max-w-xl flex-1 bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 md:fixed md:bottom-0 top-0 flex justify-center items-center z-50"
+            class="auth-frame fi-simple-main-ctn md:w-1/2 max-w-xl flex-1 bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 md:fixed md:bottom-0 top-0 flex justify-center items-center z-50"
         >
             <main
                 @class([
@@ -51,8 +51,7 @@
             </main>
         </div>
 
-        <div class="hidden md:block fixed inset-0 z-10 bg-center bg-no-repeat bg-w bg-cover" style="background-image: url('/images/auth-bg.jpg')">
-                asdasd
+        <div class="auth-bg hidden md:block fixed inset-0 z-10 bg-right bg-no-repeat bg-w bg-cover" style="background-image: url('/images/auth-bg.jpg')">
         </div>
 
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::FOOTER, scopes: $livewire->getRenderHookScopes()) }}

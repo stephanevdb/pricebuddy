@@ -77,13 +77,12 @@
             </div>
 
             <div x-show="tab === 'history'">
-                @livewire(\App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart::class, ['record' =>
-                $record])
+                @livewire(\App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart::class, ['record' => $record, 'lazy' => true])
             </div>
 
             @if ($searchEnabled)
                 <div x-show="tab === 'search'">
-                    @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductSearch::class, ['record' => $record])
+                    @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductSearch::class, ['record' => $record, 'lazy' => true])
                 </div>
             @endif
 
