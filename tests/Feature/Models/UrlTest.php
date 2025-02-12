@@ -145,4 +145,35 @@ class UrlTest extends TestCase
 
         $this->assertEquals(Number::currency(150), $url->average_price);
     }
+
+    public function test_affiliate_code_gets_added_to_url()
+    {
+        $url = Url::factory()->create(['url' => 'https://example.com/product?foo=bar#baz']);
+
+        config([
+            'affiliates.enabled' => true,
+            'affiliates.sites' => [
+                [
+                    'domains' => ['example.com'],
+                    'query_params' => ['ref' => '123'],
+                ],
+            ],
+        ]);
+
+        $this->assertEquals('https://example.com/product?foo=bar&ref=123#baz', $url->buy_url);
+    }
+
+    public function test_affiliate_urls()
+    {
+        $urls = [
+            'https://www.ebay.com.au/itm/315209278735' => 'https://www.ebay.com.au/itm/315209278735?mkrid=705-53470-19255-0&mkcid=1&campid=5339100273&siteid=15&toolid=10001&mkevt=1',
+            'https://www.amazon.com.au/dp/B08P3V5K7Y' => 'https://www.amazon.com.au/dp/B08P3V5K7Y?tag=pricebuddy-22',
+            'https://www.amazon.com/dp/B08P3V5K7Y' => 'https://www.amazon.com/dp/B08P3V5K7Y?tag=pricebuddy07-20',
+        ];
+
+        foreach ($urls as $original => $new) {
+            $urlModel = Url::factory()->create(['url' => $original]);
+            $this->assertSame($new, $urlModel->buy_url);
+        }
+    }
 }

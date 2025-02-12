@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Helpers\AffiliateHelper;
 use App\Services\Helpers\CurrencyHelper;
 use App\Services\ScrapeUrl;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -17,6 +18,7 @@ use Illuminate\Support\Str;
  * @property ?string $url
  * @property string $product_name_short
  * @property string $store_name
+ * @property string $buy_url
  * @property string $product_url
  * @property string $average_price
  * @property string $latest_price_formatted
@@ -131,6 +133,13 @@ class Url extends Model
     {
         return Attribute::make(
             get: fn () => Str::limit(($this->store->name ?? 'Missing store'), 100)
+        );
+    }
+
+    protected function buyUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AffiliateHelper::new()->parseUrl($this->url)
         );
     }
 

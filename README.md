@@ -89,6 +89,11 @@ the development environment.
 
 Contributions are welcome, please open an issue or a pull request.
 
+### Supporting development
+
+Have a look [here](https://pricebuddy.jez.me//support-project.html) for ways to 
+support the project.
+
 ## License
 
 See [LICENSE.md](LICENSE.md) for more information.

@@ -61,7 +61,7 @@ class PriceAlertNotification extends Notification
                     ->url(parse_url($this->getUrl(), PHP_URL_PATH), false)
                     ->label('View product'),
                 Action::make('buy')
-                    ->url($this->url->url, true)
+                    ->url($this->url->buy_url, true)
                     ->label('Buy'),
             ])
             ->getDatabaseMessage();
@@ -77,7 +77,7 @@ class PriceAlertNotification extends Notification
         return [
             'title' => $this->getTitle(),
             'summary' => $this->getSummary(),
-            'buyUrl' => $this->url->url,
+            'buyUrl' => $this->url->buy_url,
             'buyText' => __('Buy now from :store', ['store' => $this->url->store_name]),
             'storeName' => $this->url->store_name,
             'productUrl' => $this->getUrl(),

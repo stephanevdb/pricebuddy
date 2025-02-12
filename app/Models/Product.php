@@ -305,7 +305,7 @@ class Product extends Model
                     'store_id' => $store->getKey(),
                     'store_name' => $store->name,
                     'url_id' => $url->getKey(),
-                    'url' => $url->url,
+                    'url' => $url->buy_url,
                     'trend' => $trend,
                     'price' => $urlHistory->last(),
                     'history' => $urlHistory->toArray(),

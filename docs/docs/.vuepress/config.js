@@ -17,6 +17,7 @@ export default defineUserConfig({
         navbar: [
             {link: '/installation', text: 'Docs'},
             {link: '/features', text: 'Features'},
+            {link: '/support-project', text: 'Support'},
             {link: 'https://github.com/jez500/pricebuddy', text: 'Github'},
         ],
 
