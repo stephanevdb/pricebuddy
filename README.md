@@ -1,4 +1,4 @@
-# <img src="public/images/logo-full.svg" width="250" height="auto" alt="PriceBuddy>
+# <img src="public/images/logo-full.svg" width="250" height="auto" alt="PriceBuddy">
 
 PriceBuddy is an open source, self-hostable, web application that allows users
 to compare prices of products from different online retailers. Users can search
@@ -43,7 +43,7 @@ Product history
 
 This was largely inspired by [Discount Bandit](https://github.com/Cybrarist/Discount-Bandit) 
 which is a very similar application, but it lacks the flexibility to use any store without
-code changes. I also found it to be rather buggy and difficult to develop on.
+code changes.
 
 ## Installation
 
@@ -89,7 +89,7 @@ the development environment.
 
 Contributions are welcome, please open an issue or a pull request.
 
-### Supporting development
+## Supporting development
 
 Have a look [here](https://pricebuddy.jez.me//support-project.html) for ways to 
 support the project.

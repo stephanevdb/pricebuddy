@@ -3,14 +3,14 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | How many products to scrape at a time
+    | How many products to scrape at a time.
     |--------------------------------------------------------------------------
     */
     'chunk_size' => 10,
 
     /*
     |--------------------------------------------------------------------------
-    | The url to the scraper service
+    | The url to the scraper service.
     |--------------------------------------------------------------------------
     */
     'scraper_api_url' => env('SCRAPER_BASE_URL', 'http://scraper:3000'),

@@ -5,6 +5,9 @@ namespace App\Services\Helpers;
 use Illuminate\Support\Number;
 use NumberFormatter;
 
+/**
+ * Helpers to make dealing with currencies easier.
+ */
 class CurrencyHelper
 {
     public static function getLocale(): string

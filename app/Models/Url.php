@@ -15,6 +15,8 @@ use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 /**
+ * Product URL.
+ *
  * @property ?string $url
  * @property string $product_name_short
  * @property string $store_name
