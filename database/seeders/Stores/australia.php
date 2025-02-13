@@ -29,6 +29,7 @@ return [
     ],
     [
         'name' => 'Good Guys',
+        'slug' => 'good-guys',
         'domains' => [
             ['domain' => 'thegoodguys.com.au'],
             ['domain' => 'www.thegoodguys.com.au'],
@@ -52,6 +53,7 @@ return [
     [
         'name' => 'JB Hi-Fi',
         'initials' => 'JB',
+        'slug' => 'jb-hi-fi',
         'domains' => [
             ['domain' => 'jbhifi.com.au'],
             ['domain' => 'www.jbhifi.com.au'],
@@ -242,6 +244,7 @@ return [
     [
         'name' => 'Woolworths AU',
         'initials' => 'WW',
+        'slug' => 'woolworths-au',
         'domains' => [
             ['domain' => 'woolworths.com.au'],
             ['domain' => 'www.woolworths.com.au'],
@@ -265,10 +268,38 @@ return [
             'scraper_service_settings' => '',
         ],
     ],
+    [
+        'name' => 'Harvey Norman',
+        'initials' => 'HN',
+        'slug' => 'harvey-norman',
+        'domains' => [
+            ['domain' => 'harveynorman.com.au'],
+            ['domain' => 'www.harveynorman.com.au'],
+        ],
+        'scrape_strategy' => [
+            'title' => [
+                'value' => 'h1.title',
+                'type' => 'selector',
+            ],
+            'price' => [
+                'value' => '[class^="PriceCard_sf-price-card__price"]',
+                'type' => 'selector',
+            ],
+            'image' => [
+                'value' => '.img|src',
+                'type' => 'selector',
+            ],
+        ],
+        'settings' => [
+            'scraper_service' => ScraperService::Api->value,
+            'scraper_service_settings' => '',
+        ],
+    ],
 
     // Liquor.
     [
         'name' => 'BWS API',
+        'slug' => 'bws-api',
         'domains' => [
             ['domain' => 'api.bws.com.au'],
         ],
@@ -291,6 +322,7 @@ return [
     ],
     [
         'name' => 'BWS',
+        'slug' => 'bws',
         'domains' => [
             ['domain' => 'bws.com.au'],
             ['domain' => 'www.bws.com.au'],
@@ -317,6 +349,7 @@ return [
     [
         'name' => 'Liquorland',
         'initials' => 'LL',
+        'slug' => 'liquorland',
         'domains' => [
             ['domain' => 'liquorland.com.au'],
             ['domain' => 'www.liquorland.com.au'],
@@ -342,7 +375,8 @@ return [
     ],
     [
         'name' => 'Dan Murphys',
-        'initials' => 'LL',
+        'initials' => 'DM',
+        'slug' => 'dan-murphys',
         'domains' => [
             ['domain' => 'www.danmurphys.com.au', 'danmurphys.com.au'],
         ],
