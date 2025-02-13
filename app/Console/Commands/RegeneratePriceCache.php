@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class RegeneratePriceCache extends Command
 {
-    const COMMAND = 'scraper:regenerate-price-cache';
+    const COMMAND = 'buddy:regenerate-price-cache';
 
     /**
      * The name and signature of the console command.

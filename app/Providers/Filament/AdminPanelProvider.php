@@ -9,6 +9,7 @@ use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -38,6 +39,13 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->colors([
                 'primary' => self::PRIMARY_COLOR,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Help')
+                    ->group('System')
+                    ->sort(1000)
+                    ->url(config('price_buddy.help_url'), shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-question-mark-circle'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

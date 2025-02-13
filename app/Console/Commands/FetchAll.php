@@ -5,9 +5,9 @@ namespace App\Console\Commands;
 use App\Services\PriceFetcherService;
 use Illuminate\Console\Command;
 
-class ScraperFetchAll extends Command
+class FetchAll extends Command
 {
-    const COMMAND = 'scraper:fetch-all';
+    const COMMAND = 'buddy:fetch-all';
 
     /**
      * The name and signature of the console command.

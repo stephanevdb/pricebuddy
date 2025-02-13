@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class InitDatabase extends Command
 {
-    const COMMAND = 'scraper:init-db';
+    const COMMAND = 'buddy:init-db';
 
     /**
      * The name and signature of the console command.
@@ -53,7 +53,7 @@ class InitDatabase extends Command
             // @phpstan-ignore-next-line
             $storeCountry = env('DEFAULT_STORES_COUNTRY', 'all');
             $this->components->task('Creating stores for country: '.$storeCountry, fn () => $this
-                ->callSilent(ScraperCreateStores::COMMAND, ['country' => $storeCountry])
+                ->callSilent(CreateStores::COMMAND, ['country' => $storeCountry])
             );
 
             // @phpstan-ignore-next-line

@@ -11,9 +11,9 @@ use Illuminate\Support\Str;
 
 use function Laravel\Prompts\multiselect;
 
-class ScraperCreateStores extends Command implements PromptsForMissingInput
+class CreateStores extends Command implements PromptsForMissingInput
 {
-    const COMMAND = 'scraper:create-stores';
+    const COMMAND = 'buddy:create-stores';
 
     /**
      * The name and signature of the console command.

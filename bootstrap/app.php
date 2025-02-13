@@ -1,6 +1,6 @@
 <?php
 
-use App\Console\Commands\ScraperFetchAll;
+use App\Console\Commands\FetchAll;
 use App\Services\Helpers\SettingsHelper;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (Schedule $schedule) {
         // Check for new prices
-        $schedule->command(ScraperFetchAll::COMMAND, ['--log'])
+        $schedule->command(FetchAll::COMMAND, ['--log'])
             ->dailyAt(SettingsHelper::getSetting('scrape_schedule_time', '06:00'));
         // Prune old log messages
         $schedule->command('model:prune', ['--model' => [LogMessage::class]])->daily();
