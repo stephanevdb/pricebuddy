@@ -126,20 +126,22 @@ class StoreResource extends Resource
         return $table
             ->columns([
                 Split::make([
-                    TextColumn::make('initials')
-                        ->formatStateUsing(fn (string $state): View => view(
-                            'components.initials',
-                            ['initials' => $state],
-                        ))
-                        ->width('7%')
-                        ->label('')
-                        ->grow(false)
-                        ->alignCenter(),
-                    TextColumn::make('name')
-                        ->searchable()
-                        ->sortable()
-                        ->weight(FontWeight::Bold)
-                        ->description(fn (Store $record): HtmlString => $record->domains_html),
+                    Split::make([
+                        TextColumn::make('initials')
+                            ->formatStateUsing(fn (string $state): View => view(
+                                'components.initials',
+                                ['initials' => $state],
+                            ))
+                            ->width('7%')
+                            ->label('')
+                            ->grow(false)
+                            ->alignCenter(),
+                        TextColumn::make('name')
+                            ->searchable()
+                            ->sortable()
+                            ->weight(FontWeight::Bold)
+                            ->description(fn (Store $record): HtmlString => $record->domains_html),
+                    ]),
                     TextColumn::make('products_count')
                         ->sortable()
                         ->formatStateUsing(fn (string $state) => $state.' products')

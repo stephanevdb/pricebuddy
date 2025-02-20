@@ -19,8 +19,10 @@ class TestResultsWidget extends Widget
 
     protected function getViewData(): array
     {
+        $results = session()->pull('test_scrape');
+
         return [
-            'scrape' => session()->pull('test_scrape'),
+            'scrape' => $results,
             'record' => $this->record,
         ];
     }

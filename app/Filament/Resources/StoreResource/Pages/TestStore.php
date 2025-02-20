@@ -46,6 +46,8 @@ class TestStore extends EditRecord
         $store->update(['settings' => array_merge($store->settings, ['test_url' => $url])]);
 
         session()->put('test_scrape', $scrape);
+
+        $this->redirect($this->getRedirectUrl());
     }
 
     public function getFormActions(): array
@@ -76,7 +78,7 @@ class TestStore extends EditRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('test');
+        return $this->getResource()::getUrl('test', ['record' => $this->getRecord()]);
     }
 
     protected function getFooterWidgets(): array
