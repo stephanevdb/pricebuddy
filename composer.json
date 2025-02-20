@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.4",
         "ext-intl": "*",
+        "archilex/filament-toggle-icon-column": "^3.1",
         "awcodes/filament-quick-create": "^3.6",
         "calebporzio/sushi": "^2.5",
         "fakerphp/faker": "^1.23",
