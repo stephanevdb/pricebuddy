@@ -2,6 +2,7 @@
 
 namespace App\Services\Helpers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 use NumberFormatter;
 
@@ -13,6 +14,25 @@ class CurrencyHelper
     public static function getLocale(): string
     {
         return config('app.currency_locale', 'en_US');
+    }
+
+    public static function getCurrency(): string
+    {
+        return self::getCurrencyDetail()['iso'] ?? 'USD';
+    }
+
+    public static function getCurrencyDetail(): ?array
+    {
+        return once(fn () => self::getAllCurrencies()
+            ->firstWhere('locale', self::getLocale())
+        );
+    }
+
+    public static function getAllCurrencies(): Collection
+    {
+        return collect(json_decode(
+            file_get_contents(base_path('/resources/datasets/currency.json')), true)
+        );
     }
 
     public static function getSymbol(?string $locale = null): string

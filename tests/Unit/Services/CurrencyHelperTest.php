@@ -18,6 +18,27 @@ class CurrencyHelperTest extends TestCase
         $this->assertEquals('fr_FR', CurrencyHelper::getLocale());
     }
 
+    public function test_get_all_currencies()
+    {
+        foreach (CurrencyHelper::getAllCurrencies() as $currency) {
+            $this->assertArrayHasKey('country_territory', $currency);
+            $this->assertArrayHasKey('currency', $currency);
+            $this->assertArrayHasKey('iso', $currency);
+            $this->assertArrayHasKey('locale', $currency);
+            $this->assertArrayHasKey('separation', $currency);
+            $this->assertArrayHasKey('position', $currency);
+        }
+
+        config(['app.currency_locale' => 'en_AU']);
+        $this->assertSame('AUD', CurrencyHelper::getCurrency());
+    }
+
+    public function test_get_currency_iso()
+    {
+        config(['app.currency_locale' => 'en_AU']);
+        $this->assertSame('AUD', CurrencyHelper::getCurrency());
+    }
+
     public function test_get_symbol_returns_correct_symbol()
     {
         config(['app.currency_locale' => 'en_US']);
