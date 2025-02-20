@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Enums\NotificationMethods;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
+use App\Services\Helpers\CurrencyHelper;
 use App\Services\Helpers\NotificationsHelper;
 use App\Services\Helpers\SettingsHelper;
 use Filament\Facades\Filament;
@@ -38,7 +39,11 @@ class AppServiceProvider extends ServiceProvider
     {
         FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
-            fn (): string => Blade::render('@vite(\'resources/scss/app.scss\')<link rel="manifest" href="/manifest.json">'),
+            fn (): string => Blade::render(
+                '@vite([\'resources/scss/app.scss\', \'resources/js/app.js\'])'.
+                '@include(\'body.js-settings\')'.
+                '<link rel="manifest" href="/manifest.json">'
+            ),
         );
 
         Filament::registerUserMenuItems([

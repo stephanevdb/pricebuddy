@@ -34,10 +34,10 @@
 
         {{-- Tab content --}}
         <div class="mt-8">
-            <div x-show="tab === 'overview'" x-init="console.log('I am called second')">
+            <div x-show="tab === 'overview'">
                 <div class="flex gap-3 md:gap-8 flex-col md:flex-row">
                     <div class="md:w-1/3 flex flex-col">
-                        <div class="bg-white rounded-lg p-4 h-auto w-full flex justify-center">
+                        <div class="bg-white rounded-lg p-4 mb-4 h-auto w-full flex justify-center">
                             <div class="">
                                 <img
                                     src="{{ $record->primary_image }}"
@@ -46,13 +46,21 @@
                                 />
                             </div>
                         </div>
-                        <div class="mt-4 md:mt-6">
-                            <div class="pb-2 md:pb-4">
-                                <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    </div>
+
+                    <div class="flex-1 flex flex-col md:h-full mb-2">
+                        <div>
+                            @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductUrlStats::class, ['record'
+                            => $record])
+                        </div>
+
+                        <div class="mt-6 md:mt-8">
+                            <div class="pb-2 gap-4 md:flex-row flex flex-col md:items-start">
+                                <div class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ __('Created :date', ['date' => $record->created_at->diffForHumans()]) }}
                                     {{ $record->tags->count() > 0 ? __('in').':' : '' }}
                                 </div>
-                                <div class="flex gap-2 flex-wrap">
+                                <div class="flex gap-2 flex-wrap items-center">
                                     @foreach($record->tags as $tag)
                                         <x-filament::badge
                                             tag="a"
@@ -64,13 +72,6 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="flex-1 flex flex-col md:h-full mb-2">
-                        <div>
-                            @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductUrlStats::class, ['record'
-                            => $record])
                         </div>
                     </div>
                 </div>

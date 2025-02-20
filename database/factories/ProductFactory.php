@@ -29,7 +29,7 @@ class ProductFactory extends Factory
             'status' => Statuses::Published->value,
             'notify_price' => $this->faker->randomFloat(2, 10, 100),
             'notify_percent' => $this->faker->randomFloat(2, 10, 100),
-            'favourite' => $this->faker->boolean,
+            'favourite' => true,
             'only_official' => $this->faker->boolean,
             'price_cache' => [],
             'ignored_urls' => [],

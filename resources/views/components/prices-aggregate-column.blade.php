@@ -2,7 +2,10 @@
     use App\Enums\Icons;
     use Filament\Support\Colors\Color;
 
-    $items = $getState();
+    if (empty($items) && is_callable($getState)) {
+        $items = $getState();
+    }
+
     $color = Color::Gray;
 
     $iconMap = [
@@ -17,7 +20,8 @@
         @foreach($items as $name => $price)
             <li class="text-custom-600 dark:text-custom-400 whitespace-nowrap flex gap-2">
                 <x-filament::icon :icon="$iconMap[$name]" class="w-4"/>
-                <span>{{ $price }}</span> <span>({{ ucwords($name) }})</span>
+                <span>{{ ucwords($name) }}</span> <span>({{ $price }})</span>
+
             </li>
         @endforeach
     </ul>

@@ -20,6 +20,7 @@ class ProductSeeder extends Seeder
             'title' => 'Amazon Echo Dot',
             'urls' => [
                 'https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3' => ['49.99', '49.99', '39.99', '39.99', '59', '59', '49.99'],
+                'https://www.ebay.com/itm/255775080771' => ['41.99', '41.99', '35.99', '19.99', '19.99', '49.99', '49.99'],
             ],
             'image' => 'https://m.media-amazon.com/images/I/71yRY8YlAbL._AC_SX679_.jpg',
             'tag' => 'Tech',

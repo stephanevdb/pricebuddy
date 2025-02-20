@@ -12,3 +12,17 @@
 .product-view-image .fi-section-content {
     padding: 0;
 }
+
+.fi-page {
+    > section:first-child {
+        @media screen and (max-width: 600px) {
+            padding-top: 1rem;
+        }
+
+        .fi-header-heading {
+            @media screen and (max-width: 600px) {
+                padding-bottom: .5rem;
+            }
+        }
+    }
+}

@@ -12,7 +12,15 @@
                     <x-filament::icon icon="heroicon-s-tag" class="h-5 w-5 pt-1 text-gray-400 dark:text-gray-600" />
                     {{ $group['heading'] }}
                 </h3>
-                @livewire(ProductStatsOverview::class, ['ids' => $group['stats']])
+                <div class="fi-wi-stats-overview-stats-ctn grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach (App\Models\Product::findMany($group['stats']) as $product)
+                        <div>
+                            <x-product-card :product="$product" />
+                        </div>
+                    @endforeach
+                </div>
+
+{{--                @livewire(ProductStatsOverview::class, ['ids' => $group['stats']])--}}
             </div>
         @endforeach
     @endif

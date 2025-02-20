@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Rules\StoreUrl;
 use App\Services\Helpers\CurrencyHelper;
+use Archilex\ToggleIconColumn\Columns\ToggleIconColumn;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -104,6 +105,9 @@ class ProductResource extends Resource
                     ->multiple()
                     ->nullable()
                     ->preload(),
+                Forms\Components\Toggle::make('favourite')
+                    ->label('Favourite')
+                    ->hintIcon(Icons::Help->value, 'Mark this product as favourite'),
             ])
                 ->columns(2)
                 ->description('Product info'),
@@ -134,9 +138,9 @@ class ProductResource extends Resource
 
                     Tables\Columns\Layout\Split::make([
                         Tables\Columns\ImageColumn::make('primary_image')
-                            ->width(50)
-                            ->height(50)
-                            ->extraImgAttributes(['class' => 'rounded-md p-2 bg-white mr-2'])
+                            ->width(60)
+                            ->height(60)
+                            ->extraImgAttributes(['class' => 'rounded-md p-1 bg-white mr-2'])
                             ->label('Image')
                             ->url(fn ($record): string => $record->action_urls['view'])
                             ->grow(false),
@@ -147,7 +151,7 @@ class ProductResource extends Resource
                                 ->formatStateUsing(fn ($state): HtmlString => new HtmlString('<span title="'.$state.'">'.Str::limit($state, 50).'</span>'))
                                 ->sortable()
                                 ->weight(FontWeight::Bold)
-                                ->extraAttributes(['class' => 'pr-4'])
+                                ->extraAttributes(['class' => 'pr-4 min-w-40'])
                                 ->url(fn (Product $record): string => $record->action_urls['view']),
 
                             TextColumn::make('tags')
@@ -181,6 +185,11 @@ class ProductResource extends Resource
                     TextColumn::make('status')
                         ->badge()
                         ->sortable()->width('sm')
+                        ->grow(false),
+
+                    ToggleIconColumn::make('favourite')
+                        ->onIcon('heroicon-s-star')
+                        ->offIcon('heroicon-o-star')
                         ->grow(false),
 
                 ])->from('md'),

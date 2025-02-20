@@ -30,6 +30,7 @@ use Illuminate\Support\Str;
  * @property ?string $view_url
  * @property array $price_cache
  * @property string $average_price
+ * @property string $trend
  * @property Collection $urls
  * @property ?float $notify_price
  * @property ?float $notify_percent
@@ -39,6 +40,7 @@ use Illuminate\Support\Str;
  * @property array $urls_array
  * @property array $ignored_urls
  * @property array $ignored_search_urls
+ * @property float $current_price
  */
 class Product extends Model
 {
@@ -54,6 +56,7 @@ class Product extends Model
         'ignored_urls' => 'array',
         'price_cache' => 'array',
         'created_at' => 'datetime',
+        'favourite' => 'boolean',
     ];
 
     public static function booted()
@@ -164,10 +167,10 @@ class Product extends Model
     {
         return Attribute::make(
             get: function (): string {
-                /** @var PriceCacheDto $first */
-                $first = $this->getPriceCache()->first();
-
-                return $first->getTrend();
+                return Trend::getTrendDirection([
+                    $this->current_price,
+                    $this->getPriceCacheAggregate('avg'),
+                ]);
             },
         );
     }
@@ -313,6 +316,34 @@ class Product extends Model
             })
             ->sortBy('price')
             ->values();
+    }
+
+    public function getAggregateRange(): array
+    {
+        return once(function () {
+            $dailyPrices = [];
+
+            $this->getPriceCache()
+                ->each(function (PriceCacheDto $price) use (&$dailyPrices) {
+                    $price->getHistory()
+                        ->each(function ($price, $date) use (&$dailyPrices) {
+                            $dailyPrices[$date][] = $price;
+                        });
+                });
+
+            $data = [];
+            foreach ($dailyPrices as $date => $prices) {
+                $min = min($prices);
+                $max = max($prices);
+                $avg = round((array_sum($prices) / count($prices)), 2);
+
+                $data['max'][$date] = $max - $avg;
+                $data['avg'][$date] = $avg - $min;
+                $data['min'][$date] = $min;
+            }
+
+            return $data;
+        });
     }
 
     public function getAllPricesQuery(): Builder
