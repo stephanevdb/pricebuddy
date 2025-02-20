@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use Filament\Support\Colors\ColorManager;
+
 enum Trend: string
 {
     case Up = 'up';
@@ -33,6 +35,14 @@ enum Trend: string
             self::Up->value => 'danger',
             default => 'warning',
         };
+    }
+
+    public static function getColorRgb(?string $trend): array
+    {
+        $manager = resolve(ColorManager::class);
+        $colorString = self::getColor($trend);
+
+        return $manager->getColors()[$colorString];
     }
 
     /**
