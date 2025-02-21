@@ -34,6 +34,7 @@ class ProductStatsOverview extends BaseWidget
         return $products
             ->currentUser()
             ->published()
+            ->favourite()
             ->with('tags')
             ->get()
             ->filter(fn (Product $product) => isset($product->price_cache[0]))

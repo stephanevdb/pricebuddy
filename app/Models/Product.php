@@ -42,6 +42,7 @@ use Illuminate\Support\Str;
  * @property array $ignored_search_urls
  * @property float $current_price
  * @property bool $is_last_scrape_successful
+ * @property bool $is_notified_price
  * @property Carbon $created_at
  */
 class Product extends Model
@@ -134,6 +135,14 @@ class Product extends Model
     public function scopePublished(EloquentBuilder $query): EloquentBuilder
     {
         return $query->where('status', Statuses::Published);
+    }
+
+    /**
+     * Scope to only favoured products.
+     */
+    public function scopeFavourite(EloquentBuilder $query, bool $favourite = true): EloquentBuilder
+    {
+        return $query->where('favourite', $favourite);
     }
 
     /**
@@ -239,6 +248,16 @@ class Product extends Model
             get: fn ($value): bool => $this->getPriceCache()
                 ->filter(fn (PriceCacheDto $price) => $price->isLastScrapeSuccessful())
                 ->count() === $this->getPriceCache()->count()
+        );
+    }
+
+    /**
+     * Does lowest price match notification.
+     */
+    public function isNotifiedPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): bool => $this->shouldNotifyOnPrice($this->current_price)
         );
     }
 

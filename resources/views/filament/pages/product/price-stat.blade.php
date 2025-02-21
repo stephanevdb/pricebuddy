@@ -98,11 +98,12 @@
 
 @if (! $priceCache->isLastScrapeSuccessful())
     <div class="mb-4">
-        @include('components.warning-badge', [
+        @include('components.icon-badge', [
             'hoverText' => __('Last scrape successful was :hours hours ago', [
                 'hours' => $priceCache->getHoursSinceLastScrape() ?? 'never'
             ]),
             'label' => __('Last scrape failed'),
+             'color' => 'warning',
         ])
     </div>
 @endif
