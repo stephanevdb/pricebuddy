@@ -3,6 +3,7 @@
 namespace App\Dto;
 
 use App\Enums\Trend;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 
@@ -22,6 +23,8 @@ class PriceCacheDto
 
     private array $history;
 
+    private ?Carbon $lastScrapeDate;
+
     public function __construct(
         float $price,
         ?int $storeId = null,
@@ -29,7 +32,8 @@ class PriceCacheDto
         ?int $urlId = null,
         ?string $url = null,
         string $trend = Trend::None->value,
-        array $history = []
+        array $history = [],
+        ?string $lastScrape = null
     ) {
         $this->storeId = $storeId;
         $this->storeName = $storeName;
@@ -38,6 +42,7 @@ class PriceCacheDto
         $this->trend = $trend;
         $this->price = $price;
         $this->history = $history;
+        $this->lastScrapeDate = $lastScrape ? Carbon::parse($lastScrape) : null;
     }
 
     // Getters
@@ -96,6 +101,23 @@ class PriceCacheDto
         return collect($this->history)->reverse()->take($count)->reverse();
     }
 
+    public function getLastScrapeDate(): ?Carbon
+    {
+        return $this->lastScrapeDate;
+    }
+
+    public function getHoursSinceLastScrape(): ?float
+    {
+        return $this->lastScrapeDate?->diffInHours(now());
+    }
+
+    public function isLastScrapeSuccessful(): bool
+    {
+        $hours = $this->getHoursSinceLastScrape();
+
+        return $hours && $hours < 24;
+    }
+
     public static function fromArray(array $data): self
     {
         return new self(
@@ -105,7 +127,8 @@ class PriceCacheDto
             $data['url_id'] ?? null,
             $data['url'] ?? null,
             $data['trend'] ?? Trend::None->value,
-            $data['history']
+            $data['history'],
+            $data['last_scrape'] ?? null
         );
     }
 
@@ -123,6 +146,9 @@ class PriceCacheDto
             'price' => $this->getPrice(),
             'price_formatted' => $this->getPriceFormatted(),
             'history' => $this->getHistory(),
+            'last_scrape' => $this->getLastScrapeDate(),
+            'hours_since_last_scrape' => $this->getHoursSinceLastScrape(),
+            'successful_last_scrape' => $this->isLastScrapeSuccessful(),
         ];
     }
 }

@@ -41,6 +41,8 @@ use Illuminate\Support\Str;
  * @property array $ignored_urls
  * @property array $ignored_search_urls
  * @property float $current_price
+ * @property bool $is_last_scrape_successful
+ * @property Carbon $created_at
  */
 class Product extends Model
 {
@@ -229,6 +231,18 @@ class Product extends Model
     }
 
     /**
+     * Were all the last scrapes successful.
+     */
+    public function isLastScrapeSuccessful(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value): bool => $this->getPriceCache()
+                ->filter(fn (PriceCacheDto $price) => $price->isLastScrapeSuccessful())
+                ->count() === $this->getPriceCache()->count()
+        );
+    }
+
+    /**
      * Get the view url for the product.
      */
     public function getViewUrlAttribute(): ?string
@@ -299,9 +313,16 @@ class Product extends Model
                 /** @var ?Store $store */
                 $store = $url->store;
 
-                // Build trend.
-                $lastTwo = $urlHistory->values()->reverse()->take(2)->values()->toArray();
-                $trend = Trend::getTrendDirection($lastTwo);
+                // Get last scraped price.
+                /** @var ?Price $lastScrapedPrice */
+                $lastScrapedPrice = $url->prices()->latest('id')->first();
+                $lastScrapedTimestamp = $lastScrapedPrice?->created_at;
+
+                // Build trend, current price vs average price.
+                $trend = Trend::getTrendDirection([
+                    $urlHistory->last(),
+                    $urlHistory->values()->avg(),
+                ]);
 
                 // Build output. @todo replace with DTO
                 return [
@@ -312,6 +333,7 @@ class Product extends Model
                     'trend' => $trend,
                     'price' => $urlHistory->last(),
                     'history' => $urlHistory->toArray(),
+                    'last_scrape' => $lastScrapedTimestamp?->toDateTimeString(),
                 ];
             })
             ->sortBy('price')

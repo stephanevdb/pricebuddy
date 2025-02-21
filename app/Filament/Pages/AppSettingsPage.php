@@ -12,6 +12,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
 
 class AppSettingsPage extends SettingsPage
@@ -31,6 +32,13 @@ class AppSettingsPage extends SettingsPage
     protected static string $settings = AppSettings::class;
 
     protected static ?int $navigationSort = 100;
+
+    public function save(): void
+    {
+        parent::save();
+
+        Cache::flush();
+    }
 
     public function form(Form $form): Form
     {

@@ -1,5 +1,7 @@
 @php
     use App\Enums\Trend;
+    use function Filament\Support\get_color_css_variables;
+
     /** @var \App\Models\Product $product */
     /** @var \App\Dto\PriceCacheDto $latestPrice */
     $latestPrice = $product->getPriceCache()->first();
@@ -26,9 +28,17 @@
                 <span class="text-2xl font-semibold">
                     {{ $latestPrice->getPriceFormatted() }}
                 </span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
+                <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
                     {{ '@'.$latestPrice->getStoreName() }}
                 </span>
+                @if (! $product->is_last_scrape_successful)
+                    <div class="mt-1">
+                        @include('components.warning-badge', [
+                            'hoverText' => __('One or more urls failed last scrape'),
+                            'label' => __('Scrape error'),
+                        ])
+                    </div>
+                @endif
             </div>
         </div>
     </a>
@@ -37,9 +47,10 @@
         class="mt-1 border-t border-t-gray-200 dark:border-t-gray-800 bg-gray-200/20 dark:bg-gray-950/20"
         style="border-radius: 0 0 .5rem .5rem"
     >
-        <button class="py-2 bg-custom-400/10 hover:bg-custom-400/20 cursor-pointer display-block w-full transition-colors duration-300 ease-in-out"
-             style="height: 60px;"
-             @click="expanded = !expanded"
+        <button
+            class="py-2 bg-custom-400/10 hover:bg-custom-400/20 cursor-pointer display-block w-full transition-colors duration-300 ease-in-out"
+            style="height: 60px;"
+            @click="expanded = !expanded"
         >
             <x-range-chart :product="$product" height="50px"/>
         </button>

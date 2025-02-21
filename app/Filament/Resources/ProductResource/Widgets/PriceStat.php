@@ -39,7 +39,7 @@ class PriceStat extends Stat
     public function data()
     {
         return array_merge(parent::data(), [
-            'trend' => $this->priceCache,
+            'priceCache' => $this->priceCache,
             'idx' => $this->idx,
         ]);
     }

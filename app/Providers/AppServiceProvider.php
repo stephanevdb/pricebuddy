@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Enums\NotificationMethods;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
-use App\Services\Helpers\CurrencyHelper;
 use App\Services\Helpers\NotificationsHelper;
 use App\Services\Helpers\SettingsHelper;
 use Filament\Facades\Filament;

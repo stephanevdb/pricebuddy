@@ -30,8 +30,7 @@ class ProductUrlStats extends BaseWidget
                 return PriceStat::make(
                     '@ '.$cache->getStoreName().($idx === 0 ? ' (Lowest price)' : ''),
                     $cache->getPriceFormatted()
-                )
-                    ->setPriceCache($idx, $cache);
+                )->setPriceCache($idx, $cache);
             })->values();
 
         return $products->toArray();

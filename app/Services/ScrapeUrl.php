@@ -70,6 +70,12 @@ class ScrapeUrl
 
         while ($attempt < $this->maxAttempts) {
             $attempt++;
+
+            // Don't use cache if previous attempt failed.
+            if ($attempt > 1) {
+                $options['use_cache'] = false;
+            }
+
             $output = $this->scrapeUrl($options);
 
             if ($output === false) {
@@ -82,11 +88,11 @@ class ScrapeUrl
             }
         }
 
-        foreach (['title', 'price'] as $required) {
+        foreach (['price', 'title'] as $required) {
             if (empty($output[$required])) {
                 $this->logger->error('Error scraping URL '.$attempt.' times', [
                     'attempts' => $attempt,
-                    'error' => 'Missing required field: '.$required,
+                    'error' => __('Missing :field when scraping', ['field' => $required]),
                     'scrape_errors' => $output['errors'] ?? [],
                     'scraped_html' => $output['body'] ?? '',
                 ]);

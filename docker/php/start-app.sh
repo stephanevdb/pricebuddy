@@ -38,6 +38,7 @@ php artisan icons:cache
 php artisan config:cache
 php artisan route:cache
 php artisan event:cache
+php artisan buddy:regenerate-price-cache
 
 # Start supervisor that handles cron and apache.
 supervisord -c /etc/supervisor/conf.d/supervisord.conf
