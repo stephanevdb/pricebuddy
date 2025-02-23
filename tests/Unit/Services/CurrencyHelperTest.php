@@ -60,6 +60,21 @@ class CurrencyHelperTest extends TestCase
         $this->assertEquals(10.0, CurrencyHelper::toFloat(10));
     }
 
+    public function test_to_float_converts_as_expected()
+    {
+        $assert = [
+            'USD $50.99' => 50.99,
+            'AUD 50.97' => 50.97,
+            '€50.98' => 50.98,
+            '10' => 10.0,
+            'invalid' => 0.0,
+        ];
+
+        foreach ($assert as $input => $expected) {
+            $this->assertEquals($expected, CurrencyHelper::toFloat($input));
+        }
+    }
+
     public function test_to_float_converts_string_value()
     {
         $this->assertEquals(10.5, CurrencyHelper::toFloat('10.5'));

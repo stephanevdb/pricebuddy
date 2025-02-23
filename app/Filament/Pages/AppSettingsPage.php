@@ -156,15 +156,15 @@ class AppSettingsPage extends SettingsPage
                 TextInput::make('url')
                     ->label('SearXng url')
                     ->placeholder('https://searxng.homelab.com/search')
-                    ->hint(new HtmlString('Url of your <a href="https://searxng.org/" target="_blank">SearXng</a> instance, including the search path'))
+                    ->hintIcon(Icons::Help->value, __('Url of your SearXng instance, including the search path'))
                     ->required(),
                 TextInput::make('search_prefix')
                     ->label('Search prefix')
                     ->placeholder('Buy')
-                    ->hint(new HtmlString('Text to prepend to the product name when searching'))
+                    ->hintIcon(Icons::Help->value, __('Text to prepend to the product name when searching'))
                     ->required(),
             ],
-            'Automatically search for additional products urls'
+            new HtmlString('Automatically search for additional products urls via <a href="https://searxng.org/" target="_blank">SearXng</a>')
         );
     }
 }

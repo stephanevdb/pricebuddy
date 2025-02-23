@@ -6,6 +6,7 @@ use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ViewField;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 trait FormHelperTrait
@@ -22,7 +23,7 @@ trait FormHelperTrait
         string $rootPath,
         string $subPath,
         array $schema = [],
-        ?string $description = null
+        string|HtmlString|null $description = null
     ): Section {
         return
         Section::make($label)

@@ -52,6 +52,15 @@ class Store extends Model
         ];
     }
 
+    public static function booted()
+    {
+        static::deleted(function (Store $store) {
+            $store->urls()->delete();
+            $store->products()
+                ->each(fn (Product $product) => $product->updatePriceCache());
+        });
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

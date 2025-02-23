@@ -67,6 +67,11 @@ class ProductResource extends Resource
             ->hintIcon(Icons::Help->value, 'The domain of the URL must be in the list of available stores')
             ->rules([new StoreUrl]);
 
+        $components[] = Forms\Components\Toggle::make('create_store')
+            ->label('Create store if it doesn\'t exist')
+            ->hintIcon(Icons::Help->value, 'Attempt to create automatically create a store. Does not always work')
+            ->default(true);
+
         return [
             Forms\Components\Section::make(__('Url of the product'))->schema($components)
                 ->description(__('Given the url we will scrape the product information. Products and their urls are unique to your user account')),

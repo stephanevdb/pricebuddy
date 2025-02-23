@@ -175,7 +175,7 @@ class ScrapeUrl
         };
 
         $value = match ($type) {
-            'selector' => $this->parseSelector($value),
+            'selector' => self::parseSelector($value),
             default => [$value]
         };
 
@@ -196,7 +196,7 @@ class ScrapeUrl
         return null;
     }
 
-    protected function parseSelector(string $selector): array
+    public static function parseSelector(string $selector): array
     {
         if (! str_contains($selector, self::SELECTOR_ATTR_DELIMITER)) {
             return [$selector, 'text'];

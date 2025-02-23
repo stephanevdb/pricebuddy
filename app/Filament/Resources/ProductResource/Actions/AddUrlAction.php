@@ -43,10 +43,18 @@ class AddUrlAction extends Action
         $this->keyBindings(['mod+a']);
 
         $this->action(function (array $data, Product $record): void {
+            /** @var Product $product */
+            $product = $this->record;
+
             try {
-                Url::createFromUrl($data['url'], $this->record->getKey(), auth()->id());
+                Url::createFromUrl(
+                    url: $data['url'],
+                    productId: $product->getKey(),
+                    userId: auth()->id(),
+                );
 
                 $this->success();
+                $this->redirect($product->view_url);
             } catch (Exception $e) {
                 $this->failure();
             }

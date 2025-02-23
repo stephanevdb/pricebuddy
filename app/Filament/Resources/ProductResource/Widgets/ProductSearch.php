@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ProductResource\Widgets;
 
-use App\Filament\Resources\ProductResource\Actions\AddSearchResultStoreAction;
 use App\Filament\Resources\ProductResource\Actions\AddSearchResultUrlAction;
 use App\Filament\Resources\ProductResource\Actions\IgnoreSearchResultUrlAction;
 use App\Models\Product;
@@ -42,7 +41,11 @@ class ProductSearch extends BaseWidget
             ->actions([
                 AddSearchResultUrlAction::make()
                     ->setProduct($product),
-                AddSearchResultStoreAction::make(),
+                AddSearchResultUrlAction::make()
+                    ->label(__('Add store'))
+                    ->color('gray')
+                    ->setProduct($product)
+                    ->visible(fn (SearchResultUrl $record) => is_null($record->store_id)),
                 IgnoreSearchResultUrlAction::make()
                     ->setProduct($product)
                     ->after(fn () => $this->dispatch('ResetProductSearchTable')),

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\AutoCreateStore;
 use App\Services\Helpers\AffiliateHelper;
 use App\Services\Helpers\CurrencyHelper;
 use App\Services\ScrapeUrl;
@@ -68,15 +69,20 @@ class Url extends Model
         return $this->url ? ScrapeUrl::new($this->url)->scrape() : [];
     }
 
-    public static function createFromUrl(string $url, ?int $productId = null, ?int $userId = null): Url|false
+    public static function createFromUrl(string $url, ?int $productId = null, ?int $userId = null, bool $createStore = true): Url|false
     {
-        $scrape = ScrapeUrl::new($url)->scrape();
         $userId = $userId ?? auth()->id();
+
+        if ($createStore) {
+            AutoCreateStore::createStoreFromUrl($url);
+        }
+
+        $scrape = ScrapeUrl::new($url)->scrape();
 
         /** @var ?Store $store */
         $store = data_get($scrape, 'store');
 
-        if (! $store || ! data_get($scrape, 'title')) {
+        if (! $store || ! data_get($scrape, 'price')) {
             return false;
         }
 
