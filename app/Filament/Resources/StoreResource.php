@@ -68,7 +68,7 @@ class StoreResource extends Resource
                             TextInput::make('domain')->label('Domain'),
                         ])->required(),
                 ])
-                    ->description('This store will be used for these matching domains'),
+                    ->description('What domains does this store apply to'),
 
                 Forms\Components\Group::make([
                     Forms\Components\Section::make('Title strategy')->schema([
@@ -102,6 +102,10 @@ class StoreResource extends Resource
                         ->placeholder("device=Desktop Firefox\nsleep=1000"),
                 ])->description('Advanced scraper service settings')->columns(2),
 
+                Forms\Components\Section::make('Notes')->schema([
+                    Forms\Components\RichEditor::make('notes')
+                        ->hiddenLabel(true),
+                ])->description('Additional notes regarding this store and how to scrape its content'),
             ])
             ->columns(1);
     }

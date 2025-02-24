@@ -39,9 +39,8 @@ class Store extends Model
         'domains',
         'scrape_strategy',
         'settings',
+        'notes',
     ];
-
-    public array $testResults = [];
 
     protected function casts(): array
     {
