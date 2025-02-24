@@ -5,11 +5,10 @@ on:
     workflows: ["CI"]
     types:
       - completed
-    tags:
-      - v1.*
 
 jobs:
   docker:
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       -
