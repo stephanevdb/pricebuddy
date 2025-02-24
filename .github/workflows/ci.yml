@@ -1,0 +1,46 @@
+on: push
+name: CI
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.4-apache-bookworm
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+          - 33306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+
+      - name: Install front-end dependencies
+        run: |
+          apt install nodejs
+          npm install
+          npm run build
+
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Check coding standards
+        run: /vendor/bin/pint --test
+
+      - name: Static code analysis
+        run: /vendor/bin/phpstan analyse
+
+      - name: Run Testsuite
+        run: php artisan test
