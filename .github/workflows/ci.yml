@@ -1,5 +1,7 @@
 on: push
+
 name: CI
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -15,9 +17,6 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Test mysql
-        run: mysql -h mysql -P 3306 -u root -ppassword -e "show databases;"
-
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
