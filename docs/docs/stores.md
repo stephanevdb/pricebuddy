@@ -149,3 +149,15 @@ scraping is proving difficult to get the data from. See the
 
 Scrapper provides its own web interface for testing and debugging, if you're using
 the default `docker-compose.yml` you can access this at `http://localhost:3000`.
+
+## Auto store creation
+
+PriceBuddy can auto create stores for you given only the product URL. This works by
+attempting to scrape the page and extract the price via common strategies. After a 
+successful strategy is found the store will be created.
+
+This will not work with all stores, but it does work for most. It will only use the
+Curl based HTTP request to get the page contents for performance reasons.
+
+If auto creation fails, try manually creating the store and using the API scraper or
+more custom strategies.

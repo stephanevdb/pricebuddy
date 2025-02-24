@@ -14,54 +14,36 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class AutoCreateStore
 {
-    protected array $titleSelectors = [
-        'meta[property="og:title"]|content',
-        'title',
-        'h1',
-    ];
+    public const DEFAULT_SCRAPER = ScraperService::Http->value;
 
-    protected array $titleRegexes = [];
+    public const ALT_SCRAPER = ScraperService::Api->value;
 
-    protected array $priceSelectors = [
-        'meta[property="product:price:amount"]|content',
-        '[itemProp="price"]|content',
-        '.price',
-        '[class^="price"]',
-        '[class*="price"]',
-    ];
+    protected array $strategies = [];
 
-    protected array $priceRegexes = [
-        '~\"price\"\:\s?\"(.*?)\"~', // Something that looks like a price, in a json object, eg "price": "99.99"
-        '~>\$(\d+(\.\d{2})?)<~', // Something that looks like a price, in a tag, eg >$99.99<
-        '~\$(\d+(\.\d{2})?)~', // Something that looks like a price, not in a tag
-    ];
-
-    protected array $imageSelectors = [
-        'meta[property="og:image"]|content',
-        'meta[property="og:image:secure_url"]|content',
-        'img[src]|src',
-    ];
-
-    protected array $imageRegexes = [
-        '~\"image\"\:\s?\"(.*?\.jpg)\"~', // Something that looks like an image, in a json object, eg "price": "99.99"
-        '~\"image\"\:\s?\"(.*?\.png)\"~', // Something that looks like an image, in a json object, eg "price": "99.99"
-    ];
-
-    public function __construct(protected string $url, protected ?string $html = null)
+    public function __construct(protected string $url, protected ?string $html = null, string $scraper = self::DEFAULT_SCRAPER)
     {
+        $this->strategies = config('price_buddy.auto_create_store_strategies', []);
+
         if (empty($html)) {
-            $this->html = WebScraper::http()
+            $this->html = WebScraper::make($scraper)
                 ->from($url)
                 ->get()
                 ->getBody();
         }
     }
 
+    public static function new(string $url, ?string $html = null, string $scraper = self::DEFAULT_SCRAPER): self
+    {
+        return resolve(static::class, [
+            'url' => $url,
+            'html' => $html,
+            'scraper' => $scraper,
+        ]);
+    }
+
     public static function canAutoCreateFromUrl(string $url): bool
     {
-        $self = new self($url);
-
-        return ! is_null($self->getStoreAttributes());
+        return ! is_null(self::new($url)->getStoreAttributes());
     }
 
     public static function createStoreFromUrl(string $url): ?Store
@@ -73,8 +55,7 @@ class AutoCreateStore
             return $existing;
         }
 
-        $self = new self($url);
-        $attributes = $self->getStoreAttributes();
+        $attributes = self::new($url)->getStoreAttributes();
 
         return $attributes
             ? Store::create($attributes)
@@ -140,11 +121,11 @@ class AutoCreateStore
 
     protected function parseTitle(): ?array
     {
-        if ($match = $this->attemptSelectors($this->titleSelectors)) {
+        if ($match = $this->attemptSelectors($this->getStrategy('title', 'selector'))) {
             return $match;
         }
 
-        if ($match = $this->attemptRegex($this->titleRegexes)) {
+        if ($match = $this->attemptRegex($this->getStrategy('title', 'regex'))) {
             return $match;
         }
 
@@ -157,11 +138,11 @@ class AutoCreateStore
             return CurrencyHelper::toFloat($value);
         };
 
-        if ($match = $this->attemptSelectors($this->priceSelectors, $validateCallback)) {
+        if ($match = $this->attemptSelectors($this->getStrategy('price', 'selector'), $validateCallback)) {
             return $match;
         }
 
-        if ($match = $this->attemptRegex($this->priceRegexes, $validateCallback)) {
+        if ($match = $this->attemptRegex($this->getStrategy('price', 'regex'), $validateCallback)) {
             return $match;
         }
 
@@ -170,11 +151,11 @@ class AutoCreateStore
 
     protected function parseImage(): ?array
     {
-        if ($match = $this->attemptSelectors($this->imageSelectors)) {
+        if ($match = $this->attemptSelectors($this->getStrategy('image', 'selector'))) {
             return $match;
         }
 
-        if ($match = $this->attemptRegex($this->imageRegexes)) {
+        if ($match = $this->attemptRegex($this->getStrategy('title', 'regex'))) {
             return $match;
         }
 
@@ -251,5 +232,10 @@ class AutoCreateStore
         return ! empty($workingRegex)
             ? ['type' => 'regex', 'value' => $workingRegex, 'data' => $value]
             : null;
+    }
+
+    protected function getStrategy(string $fieldName, string $type): ?array
+    {
+        return data_get($this->strategies, $fieldName.'.'.$type);
     }
 }
