@@ -4,19 +4,20 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     container:
-      image: php:8.4-apache-bookworm
+      image: jez500/pricebuddy-tests-8.4:latest
 
     services:
       mysql:
         image: mysql:5.7
         env:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: test
-        ports:
-          - 33306:3306
+          MYSQL_DATABASE: tests_db
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+      - name: Test mysql
+        run: mysql -h mysql -P 3306 -u root -ppassword -e "show databases;"
+
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -27,20 +28,21 @@ jobs:
 
       - name: Install front-end dependencies
         run: |
-          apt install nodejs
           npm install
           npm run build
 
       - name: Prepare Laravel Application
         run: |
-          cp .env.example .env
+          cp .env.ci .env
           php artisan key:generate
 
       - name: Check coding standards
-        run: /vendor/bin/pint --test
+        run: vendor/bin/pint --test
 
       - name: Static code analysis
-        run: /vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse --memory-limit=1G
 
       - name: Run Testsuite
-        run: php artisan test
+        run: |
+          sed -i -e 's/tests_db/mysql/g' phpunit.xml
+          php artisan test
