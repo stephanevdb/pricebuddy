@@ -1,9 +1,17 @@
 ARG PHP_VERSION=8.4
 
-FROM node:20 as frontend
+# Build vendor, required for build frontend
+FROM jez500/pricebuddy-tests-${PHP_VERSION}:latest as builder
 
-WORKDIR /app
 COPY ../.. /app
+
+RUN mkdir -p storage/framework/sessions \
+    && mkdir -p storage/framework/views \
+    && mkdir -p storage/framework/testing \
+    && mkdir -p storage/logs \
+    && mkdir -p storage/app/public
+
+RUN composer install --no-dev
 
 RUN npm install && \
     npm run build && \
@@ -44,8 +52,9 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 COPY --from=composer/composer:2-bin /composer /usr/bin/composer
 
 COPY ../.. /app
-COPY --from=frontend /app/public/build /app/public/build
-COPY --from=frontend /app/docs/docs/.vuepress/dist /app/public/docs
+COPY --from=builder /app/vendor /app/vendor
+COPY --from=builder /app/public/build /app/public/build
+COPY --from=builder /app/docs/docs/.vuepress/dist /app/public/docs
 
 COPY ../../docker/php/php.ini /usr/local/etc/php/conf.d/zzz-php-overrides.ini
 COPY ../../docker/php/schedule-cron /etc/cron.d/schedule-cron
