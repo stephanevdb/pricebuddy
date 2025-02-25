@@ -45,6 +45,13 @@ class AppServiceProvider extends ServiceProvider
             ),
         );
 
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIDEBAR_FOOTER,
+            fn (): string => view('components.sidebar-footer', [
+                'content' => file_get_contents(base_path('/VERSION')),
+            ]),
+        );
+
         Filament::registerUserMenuItems([
             MenuItem::make()
                 ->label(__('Account settings'))
