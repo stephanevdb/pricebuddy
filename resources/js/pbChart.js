@@ -1,4 +1,5 @@
 import Chart from 'chart.js/auto'
+import { debounce } from "lodash";
 
 // test.
 export default function pbChart({ cachedData, options, type }) {

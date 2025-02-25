@@ -4,12 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Enums\Icons;
 use App\Enums\Statuses;
+use App\Filament\Resources\ProductResource\Columns\ProductCardColumn;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Rules\StoreUrl;
 use App\Services\Helpers\CurrencyHelper;
-use Archilex\ToggleIconColumn\Columns\ToggleIconColumn;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -140,7 +140,6 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\Layout\Split::make([
-
                     Tables\Columns\Layout\Split::make([
                         Tables\Columns\ImageColumn::make('primary_image')
                             ->width(60)
@@ -166,38 +165,12 @@ class ProductResource extends Resource
                                 ->url(null)
                                 ->grow(false),
                         ]),
-                    ])->extraAttributes(['class' => 'max-w-md']),
+                    ])->extraAttributes(['class' => 'max-w-md mb-2']),
 
-                    TextColumn::make('price_cache')
-                        ->view('components.prices-column')
-                        ->label('Current Prices')
-                        ->url(null)
-                        ->width('sm')
-                        ->grow(false),
-
-                    TextColumn::make('price_aggregates')
-                        ->view('components.prices-aggregate-column')
-                        ->label('Aggregates')
-                        ->url(null)
-                        ->grow(false),
-
-                    Tables\Columns\Layout\Split::make([
-                        self::getAggregateTableColumn('avg'),
-                        self::getAggregateTableColumn('min'),
-                        self::getAggregateTableColumn('max'),
-                    ])->grow(false),
-
-                    TextColumn::make('status')
-                        ->badge()
-                        ->sortable()->width('sm')
-                        ->grow(false),
-
-                    ToggleIconColumn::make('favourite')
-                        ->onIcon('heroicon-s-star')
-                        ->offIcon('heroicon-o-star')
-                        ->grow(false),
-
-                ])->from('md'),
+                    ProductCardColumn::make('product_card')
+                        ->label('Detail')
+                        ->extraAttributes(['class' => 'w-full md:max-w-sm lg:max-w-md']),
+                ])->extraAttributes(['class' => 'w-full'])->from('sm'),
             ])
             ->filters([
                 SelectFilter::make('status')

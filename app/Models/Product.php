@@ -187,6 +187,18 @@ class Product extends Model
     }
 
     /**
+     * Does the product have a price history.
+     */
+    public function hasHistory(): Attribute
+    {
+        return Attribute::make(
+            get: function (): bool {
+                return $this->trend !== Trend::None->value;
+            },
+        );
+    }
+
+    /**
      * Price trend for lowest priced store.
      */
     public function priceAggregates(): Attribute

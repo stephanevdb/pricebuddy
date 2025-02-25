@@ -27,7 +27,7 @@
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 640px) {
     .fi-header {
         gap: 0 !important;
         margin-bottom: -1rem;
@@ -44,12 +44,10 @@
             overflow-x: auto;
             gap: 0;
             box-shadow: -10px 0 5px 0 rgba(black, .15);
-        ;
 
             .dark & {
                 background-color: rgba(var(--gray-900), var(--tw-bg-opacity, 1));
             }
-
 
             > * {
                 flex: 1;
@@ -69,7 +67,15 @@
     }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (min-width: 640px) {
+    .fi-header {
+        .fi-ac {
+            padding-left: 2rem;
+        }
+    }
+}
+
+@media screen and (max-width: 640px) {
     .fi-main {
         padding-bottom: 3rem;
     }

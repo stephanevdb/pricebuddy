@@ -1,8 +1,5 @@
 @php
-    //    $options = $options ?? (object) [];
-    //    $cachedDatasets = $cachedDatasets ?? [];
-    //    $type = $type ?? 'line';
-        $maxHeight = $maxHeight ?? null;
+    $maxHeight = $maxHeight ?? null;
 @endphp
 <div>
     <div

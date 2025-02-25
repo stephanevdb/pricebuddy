@@ -12,6 +12,7 @@
         "chart.js": "^4.4.7",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
+        "lodash": "^4.17.21",
         "path": "^0.12.7",
         "postcss": "^8.5.0",
         "postcss-nesting": "^12.1.5",
