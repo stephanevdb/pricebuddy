@@ -5,6 +5,8 @@
     /** @var \App\Models\Product $product */
     /** @var \App\Dto\PriceCacheDto $latestPrice */
     $latestPrice = $product->getPriceCache()->first();
+
+    $hasHistory = $product->trend !== Trend::None->value;
 @endphp
 <div
     class="display-block rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
@@ -57,14 +59,27 @@
 
     <div
         class="mt-1 border-t border-t-gray-200 dark:border-t-gray-800 bg-gray-200/20 dark:bg-gray-950/20"
-        style="border-radius: 0 0 .5rem .5rem"
+        style="border-radius: 0 0 .5rem .5rem;"
     >
         <button
             class="py-2 bg-custom-400/10 hover:bg-custom-400/20 cursor-pointer display-block w-full transition-colors duration-300 ease-in-out"
-            style="height: 60px;"
+            style="{{ $hasHistory ? 'height: 60px;' : 'padding: .5rem 1rem .5rem; text-align: left' }}"
             @click="expanded = !expanded"
         >
-            <x-range-chart :product="$product" height="50px"/>
+            @if ($hasHistory)
+                <x-range-chart :product="$product" height="50px"/>
+            @else
+
+                <span class="text-xs text-gray-500 dark:text-gray-400 flex gap-2">
+                    <span>{{ __('No trend yet') }}</span>
+                    <x-filament::icon
+                        icon="heroicon-s-chevron-down"
+                        class="w-4 ml-auto"
+                        x-bind:class="{ 'transform rotate-180': expanded }"
+                    />
+                </span>
+            @endif
+
         </button>
         <div x-show="expanded">
             <div class="py-2 px-4 border-t border-t-gray-200 dark:border-t-gray-800 bg-white dark:bg-gray-900">

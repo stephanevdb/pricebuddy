@@ -7,26 +7,26 @@
 
     <div x-data="{ tab: 'overview' }">
         {{-- Tabs--}}
-        <x-filament::tabs label="Content tabs">
-            <x-filament::tabs.item @click="tab = 'overview'" :alpine-active="'tab === \'overview\''">
+        <x-filament::tabs label="Content tabs" class="justify-stretch sm:justify-start">
+            <x-filament::tabs.item @click="tab = 'overview'" :alpine-active="'tab === \'overview\''" class="w-full sm:w-auto">
                 <div class="flex align-center gap-2">
                     <x-filament::icon icon="heroicon-m-rectangle-stack" class="w-4"/>
-                    Overview
+                    {{ __('Overview') }}
                 </div>
             </x-filament::tabs.item>
 
-            <x-filament::tabs.item @click="tab = 'history'" :alpine-active="'tab === \'history\''">
+            <x-filament::tabs.item @click="tab = 'history'" :alpine-active="'tab === \'history\''" class="w-full sm:w-auto">
                 <div class="flex align-center gap-2">
                     <x-filament::icon icon="heroicon-m-chart-bar" class="w-4"/>
-                    History
+                    {{ __('History') }}
                 </div>
             </x-filament::tabs.item>
 
             @if ($searchEnabled)
-                <x-filament::tabs.item @click="tab = 'search'" :alpine-active="'tab === \'search\''">
+                <x-filament::tabs.item @click="tab = 'search'" :alpine-active="'tab === \'search\''" class="w-full sm:w-auto">
                     <div class="flex align-center gap-2">
                         <x-filament::icon icon="heroicon-m-magnifying-glass" class="w-4"/>
-                        Web search
+                        {{ __('Search') }}
                     </div>
                 </x-filament::tabs.item>
             @endif

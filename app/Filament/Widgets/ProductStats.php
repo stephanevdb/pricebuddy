@@ -35,7 +35,7 @@ class ProductStats extends Widget
             )
             ->map(fn (Collection $products, string $tagName) => [
                 'heading' => $tagName,
-                'stats' => $products->pluck('id')->toArray(),
+                'products' => $products,
             ])
             ->toArray();
     }

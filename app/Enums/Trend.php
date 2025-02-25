@@ -33,7 +33,7 @@ enum Trend: string
         return match ($trend) {
             self::Down->value => 'success',
             self::Up->value => 'danger',
-            default => 'warning',
+            default => 'gray',
         };
     }
 
