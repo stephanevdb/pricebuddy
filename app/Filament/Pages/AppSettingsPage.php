@@ -127,6 +127,7 @@ class AppSettingsPage extends SettingsPage
                     ->label('SMTP Password')
                     ->hintIcon(Icons::Help->value, 'The optional password for the SMTP server'),
                 TextInput::make('from_address')
+                    ->required()
                     ->label('From address')
                     ->hintIcon(Icons::Help->value, 'The email address to send emails from'),
                 Select::make('encryption')

@@ -71,7 +71,7 @@ class AppServiceProvider extends ServiceProvider
                 'mail.mailers.smtp.port' => NotificationsHelper::getSetting($mail, 'smtp_port'),
                 'mail.mailers.smtp.username' => NotificationsHelper::getSetting($mail, 'smtp_user'),
                 'mail.mailers.smtp.password' => NotificationsHelper::getSetting($mail, 'smtp_password'),
-                'mail.mailers.smtp.encryption' => NotificationsHelper::getSetting($mail, 'encryption'),
+                'mail.mailers.smtp.encryption' => NotificationsHelper::getSetting($mail, 'encryption') ?: null,
                 'mail.from.address' => NotificationsHelper::getSetting($mail, 'from_address', 'hello@example.com'),
             ]);
         }
