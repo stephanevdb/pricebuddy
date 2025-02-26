@@ -39,14 +39,14 @@ class ProductSearch extends BaseWidget
             )
             ->columns(self::tableColumns())
             ->actions([
-                AddSearchResultUrlAction::make()
+                AddSearchResultUrlAction::make('add_url')
                     ->setProduct($product),
-                AddSearchResultUrlAction::make()
+                AddSearchResultUrlAction::make('add_store')
                     ->label(__('Add store'))
                     ->color('gray')
                     ->setProduct($product)
                     ->visible(fn (SearchResultUrl $record) => is_null($record->store_id)),
-                IgnoreSearchResultUrlAction::make()
+                IgnoreSearchResultUrlAction::make('ignore_result')
                     ->setProduct($product)
                     ->after(fn () => $this->dispatch('ResetProductSearchTable')),
             ])
