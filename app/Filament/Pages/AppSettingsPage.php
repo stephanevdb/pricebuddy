@@ -9,6 +9,7 @@ use App\Filament\Traits\FormHelperTrait;
 use App\Settings\AppSettings;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
@@ -77,7 +78,7 @@ class AppSettingsPage extends SettingsPage
                     ->description(__('Settings for logging'))
                     ->columns(2)
                     ->schema([
-                        Forms\Components\Select::make('log_retention_days')
+                        Select::make('log_retention_days')
                             ->label('Log retention days')
                             ->options([
                                 7 => '7 days',
@@ -125,6 +126,17 @@ class AppSettingsPage extends SettingsPage
                     ->password()
                     ->label('SMTP Password')
                     ->hintIcon(Icons::Help->value, 'The optional password for the SMTP server'),
+                TextInput::make('from_address')
+                    ->label('From address')
+                    ->hintIcon(Icons::Help->value, 'The email address to send emails from'),
+                Select::make('encryption')
+                    ->label('Encryption')
+                    ->placeholder('None')
+                    ->options([
+                        'tls' => 'TLS',
+                        'ssl' => 'SSL',
+                    ])
+                    ->hintIcon(Icons::Help->value, 'The encryption method to use when sending emails'),
             ],
             __('SMTP settings for sending emails')
         );
