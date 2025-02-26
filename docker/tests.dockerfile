@@ -5,8 +5,6 @@ FROM node:${NODE_VERSION}-bookworm-slim AS node
 
 FROM jez500/pricebuddy-base-${PHP_VERSION}:latest
 
-ENV NODE_VERSION=${NODE_VERSION}
-
 # Install node
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib

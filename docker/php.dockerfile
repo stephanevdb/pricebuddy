@@ -1,5 +1,4 @@
 ARG PHP_VERSION=8.4
-ARG APP_VERSION=development
 
 # Build vendor, required for build frontend
 FROM jez500/pricebuddy-tests-${PHP_VERSION}:latest as builder
@@ -20,9 +19,9 @@ RUN npm install && \
     npm install && \
     npm run docs:build
 
-
 FROM jez500/pricebuddy-base-${PHP_VERSION}:latest
 
+ARG APP_VERSION=development
 ENV APP_VERSION=${APP_VERSION}
 
 COPY ../.. /app
