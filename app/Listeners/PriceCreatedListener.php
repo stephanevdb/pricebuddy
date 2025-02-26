@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\PriceCreatedEvent;
 use App\Notifications\PriceAlertNotification;
+use Exception;
 
 class PriceCreatedListener
 {
@@ -21,9 +22,19 @@ class PriceCreatedListener
             return;
         }
 
-        // Notify the user if the price is within the range.
-        if ($product->shouldNotifyOnPrice($event->price->price)) {
-            $product->user?->notify(new PriceAlertNotification($url));
+        try {
+            // Notify the user if the price is within the range.
+            if ($product->shouldNotifyOnPrice($event->price->price)) {
+                $product->user?->notify(new PriceAlertNotification($url));
+            }
+        } catch (Exception $e) {
+            // Log the error.
+            logger()->error('Error sending price alert notification: '.$e->getMessage(), [
+                'product' => $product->title,
+                'product_id' => $product->getKey(),
+                'url' => $event->price->url,
+                'url_id' => $event->price->getKey(),
+            ]);
         }
     }
 }
