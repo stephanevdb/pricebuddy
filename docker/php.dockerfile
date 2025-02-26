@@ -1,7 +1,7 @@
 ARG PHP_VERSION=8.4
 
 # Build vendor, required for build frontend
-FROM jez500/pricebuddy-tests-${PHP_VERSION}:latest as builder
+FROM jez500/pricebuddy-tests-${PHP_VERSION}:latest AS builder
 
 COPY ../.. /app
 

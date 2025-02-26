@@ -49,7 +49,7 @@ return [
     | The env var should get updated when building the image in CI.
     |
     */
-    'version' => (bool) env('APP_VERSION', 'development'),
+    'version' => env('APP_VERSION', 'development'),
 
     /*
     |--------------------------------------------------------------------------
