@@ -29,7 +29,7 @@ while ! nc ${DB_HOST:-database} ${DB_PORT:-3306}; do
 done
 
 # Run migrations and seed the database if required.
-php artisan scraper:init-db
+php artisan buddy:init-db
 
 # Cache it all.
 php artisan cache:clear
