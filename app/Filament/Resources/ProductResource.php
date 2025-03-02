@@ -110,9 +110,15 @@ class ProductResource extends Resource
                     ->multiple()
                     ->nullable()
                     ->preload(),
+                Forms\Components\Select::make('weight')
+                    ->label('Homepage sort order')
+                    ->hintIcon(Icons::Help->value, 'The lower the number the higher it will appear on the homepage')
+                    ->default('0')
+                    ->options(collect(range(-50, 50))->mapWithKeys(fn ($value) => [strval($value) => strval($value)])->all()),
                 Forms\Components\Toggle::make('favourite')
                     ->label('Favourite')
-                    ->hintIcon(Icons::Help->value, 'Mark this product as favourite'),
+                    ->hintIcon(Icons::Help->value, 'Mark this product as favourite')
+                    ->default(true),
             ])
                 ->columns(2)
                 ->description('Product info'),

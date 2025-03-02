@@ -95,6 +95,7 @@ class Url extends Model
                 'title' => data_get($scrape, 'title'),
                 'image' => data_get($scrape, 'image'),
                 'user_id' => $userId,
+                'favourite' => true,
             ])->id;
         }
 

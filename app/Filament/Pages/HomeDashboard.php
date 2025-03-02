@@ -49,7 +49,6 @@ class HomeDashboard extends Page
         return [
             ProductStats::class,
         ];
-        // return Filament::getWidgets();
     }
 
     /**

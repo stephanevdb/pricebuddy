@@ -23,10 +23,13 @@ class ProductStats extends Widget
 
     public static function getProductsGrouped(): array
     {
-        return Product::latest()
+        return Product::query()
             ->currentUser()
+            ->favourite()
             ->published()
             ->with('tags')
+            ->orderBy('weight')
+            ->orderByDesc('created_at')
             ->get()
             ->filter(fn (Product $product) => isset($product->price_cache[0]))
             ->groupBy(fn (Product $product) => $product->tags->count() > 0
