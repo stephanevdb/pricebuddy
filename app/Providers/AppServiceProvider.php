@@ -6,11 +6,13 @@ use App\Enums\NotificationMethods;
 use App\Models\Product;
 use App\Policies\ProductPolicy;
 use App\Services\Helpers\NotificationsHelper;
+use App\Services\Helpers\QueueHelper;
 use App\Services\Helpers\SettingsHelper;
 use Filament\Facades\Filament;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerPolicies();
         $this->registerFilamentSettings();
         $this->setConfigFromAppSettings();
+        $this->registerAbout();
     }
 
     protected function registerPolicies(): void
@@ -87,6 +90,14 @@ class AppServiceProvider extends ServiceProvider
         // Logging.
         config([
             'logging.channels.db.days' => SettingsHelper::getSetting('log_retention_days', 7),
+        ]);
+    }
+
+    protected function registerAbout(): void
+    {
+        AboutCommand::add('PriceBuddy', fn () => [
+            'Version' => config('app.version', 'development'),
+            'Queue Worker' => QueueHelper::isRunning() ? 'Running' : 'Stopped',
         ]);
     }
 }
