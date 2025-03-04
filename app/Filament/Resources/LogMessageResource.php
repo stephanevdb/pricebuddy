@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\LogLevels;
 use App\Filament\Resources\LogMessageResource\Pages;
 use App\Providers\Filament\AdminPanelProvider;
 use Filament\Forms\Form;
@@ -9,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -37,6 +39,13 @@ class LogMessageResource extends Resource
         return $table
             ->columns([
                 Split::make([
+                    TextColumn::make('level_name')
+                        ->sortable()
+                        ->searchable()
+                        ->badge()
+                        ->color(fn ($state) => LogLevels::tryFrom($state)->getColor())
+                        ->icon(fn ($state) => LogLevels::tryFrom($state)->getIcon())
+                        ->grow(false),
                     Tables\Columns\Layout\Stack::make([
                         TextColumn::make('message')
                             ->sortable()
@@ -56,7 +65,10 @@ class LogMessageResource extends Resource
             ])
             ->paginated(AdminPanelProvider::DEFAULT_PAGINATION)
             ->filters([
-                //
+                SelectFilter::make('level_name')
+                    ->options(LogLevels::class)
+                    ->label('Level')
+                    ->native(false),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

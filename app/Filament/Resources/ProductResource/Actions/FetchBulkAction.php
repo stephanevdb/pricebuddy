@@ -28,10 +28,10 @@ class FetchBulkAction extends BulkAction
 
         $this->color('gray');
 
-        $this->icon( 'heroicon-o-rocket-launch');
+        $this->icon('heroicon-o-rocket-launch');
 
         $this->action(function (): void {
-            $this->process(static function(Collection $records) {
+            $this->process(static function (Collection $records) {
                 UpdatePricesJob::dispatch(
                     $records->pluck('id')->toArray()
                 );

@@ -60,8 +60,9 @@ class PriceFetcherService
                 $successful = $product->updatePrices();
 
                 if ($this->logging) {
-                    $prefix = $successful ? "Successful" : "Failed (or partially failed)";
-                    logger()->info("$prefix price fetch for product: '{$product->title}'", [
+                    $prefix = $successful ? 'Successful' : 'Failed (or partially failed)';
+                    $method = $successful ? 'info' : 'warning';
+                    logger()->{$method}("$prefix price fetch for product: '{$product->title}'", [
                         'product_id' => $product->id,
                     ]);
                 }
