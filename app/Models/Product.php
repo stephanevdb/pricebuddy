@@ -417,14 +417,15 @@ class Product extends Model
     /**
      * Update all prices for this product.
      */
-    public function updatePrices(): void
+    public function updatePrices(): bool
     {
-        $this->urls->each(function (Url $url) {
-            $url->updatePrice();
-        });
+        $successful = $this->urls
+            ->map(fn (Url $url) => $url->updatePrice())
+            ->filter();
 
         $this->updatePriceCache();
 
+        return $successful->count() === $this->urls->count();
     }
 
     /**

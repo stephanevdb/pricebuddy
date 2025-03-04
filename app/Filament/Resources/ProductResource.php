@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\Icons;
 use App\Enums\Statuses;
+use App\Filament\Resources\ProductResource\Actions\FetchBulkAction;
 use App\Filament\Resources\ProductResource\Columns\ProductCardColumn;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
@@ -210,6 +211,7 @@ class ProductResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    FetchBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])

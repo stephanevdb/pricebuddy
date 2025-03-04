@@ -52,9 +52,20 @@ class PriceFetcherService
             ->each(function ($product) {
                 /** @var Product $product */
                 if ($this->logging) {
-                    logger()->info("Updating price for product: '{$product->title}' (id: {$product->id})");
+                    logger()->info("Starting price fetch for: '{$product->title}'", [
+                        'product_id' => $product->id,
+                    ]);
                 }
-                $product->updatePrices();
+
+                $successful = $product->updatePrices();
+
+                if ($this->logging) {
+                    $prefix = $successful ? "Successful" : "Failed (or partially failed)";
+                    logger()->info("$prefix price fetch for product: '{$product->title}'", [
+                        'product_id' => $product->id,
+                    ]);
+                }
+
                 Sleep::for(AppSettings::new()->sleep_seconds_between_scrape)->seconds();
             });
     }

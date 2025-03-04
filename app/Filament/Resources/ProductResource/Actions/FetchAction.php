@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProductResource\Actions;
 
+use App\Jobs\UpdatePricesJob;
 use App\Models\Product;
 use Exception;
 use Filament\Actions\Action;
@@ -20,7 +21,7 @@ class FetchAction extends Action
 
         $this->label(__('Fetch'));
 
-        $this->successNotificationTitle(__('Fetched latest prices'));
+        $this->successNotificationTitle(__('Prices updating in the background'));
 
         $this->failureNotificationTitle(__('Couldn\'t fetch the product, refer to logs'));
 
@@ -35,7 +36,7 @@ class FetchAction extends Action
                 /** @var Product $product */
                 $product = $this->getRecord();
 
-                $product->updatePrices();
+                UpdatePricesJob::dispatch([$product->id]);
 
                 $this->success();
             } catch (Exception $e) {
