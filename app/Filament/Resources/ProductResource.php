@@ -175,8 +175,7 @@ class ProductResource extends Resource
                     ])->extraAttributes(['class' => 'max-w-md mb-2']),
 
                     ProductCardColumn::make('product_card')
-                        ->label('Detail')
-                        ->extraAttributes(['class' => 'w-full md:max-w-sm lg:max-w-md']),
+                        ->label('Detail'),
                 ])->extraAttributes(['class' => 'w-full'])->from('sm'),
             ])
             ->filters([

@@ -3,7 +3,7 @@
     /** @var \App\Models\Product $product */
     $standalone = ! empty($standalone);
     $extraClasses = $standalone
-        ? 'rounded-lg bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10'
+        ? 'rounded-lg bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 w-full max-w-60 lg:max-w-md'
         : 'rounded-bl-xl rounded-br-xl';
 @endphp
 <div
@@ -12,11 +12,11 @@
 >
     <button
         class="py-2 bg-custom-400/10 hover:bg-custom-400/20 cursor-pointer display-block w-full transition-colors duration-300 ease-in-out"
-        style="{{ $product->has_history ? 'height: 60px;' : 'padding: .75rem 1rem 1rem; text-align: left' }}"
+        style="{{ $product->has_history ? 'height: 61px;' : 'padding: .75rem 1rem 1rem; text-align: left' }}"
         @click="expanded = !expanded"
     >
         @if ($product->has_history)
-            <x-range-chart :product="$product" height="50px"/>
+            <x-range-chart :product="$product" height="52px"/>
         @else
             <span class="text-xs text-gray-500 dark:text-gray-400 flex gap-2">
                     <span>{{ __('No trend yet') }}</span>
