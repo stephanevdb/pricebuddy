@@ -165,12 +165,16 @@ class ProductResource extends Resource
                                 ->extraAttributes(['class' => 'pr-4 min-w-40'])
                                 ->url(fn (Product $record): string => $record->action_urls['view']),
 
+                            Tables\Columns\ViewColumn::make('badges')
+                                ->view('components.product-badges'),
+
                             TextColumn::make('tags')
                                 ->color(Color::Gray)
                                 ->formatStateUsing(fn ($record): string => $record->tags->pluck('name')->join(', '))
                                 ->label('Tags')
                                 ->url(null)
-                                ->grow(false),
+                                ->grow(false)
+                                ->extraAttributes(['class' => 'mt-1']),
                         ]),
                     ])->extraAttributes(['class' => 'max-w-md mb-2']),
 

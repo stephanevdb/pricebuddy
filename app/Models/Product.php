@@ -178,10 +178,11 @@ class Product extends Model
     {
         return Attribute::make(
             get: function (): string {
-                return Trend::getTrendDirection([
+                return Trend::calculateTrend(
                     $this->current_price,
                     $this->getPriceCacheAggregate('avg'),
-                ]);
+                    $this->getPriceCacheAggregate('min'),
+                );
             },
         );
     }
@@ -350,12 +351,13 @@ class Product extends Model
                 $lastScrapedTimestamp = $lastScrapedPrice?->created_at;
 
                 // Build trend, current price vs average price.
-                $trend = Trend::getTrendDirection([
+                $trend = Trend::calculateTrend(
                     $urlHistory->last(),
                     $urlHistory->values()->avg(),
-                ]);
+                    $urlHistory->values()->min(),
+                );
 
-                // Build output. @todo replace with DTO
+                // Build output suitable for dto.
                 return [
                     'store_id' => $store->getKey(),
                     'store_name' => $store->name,

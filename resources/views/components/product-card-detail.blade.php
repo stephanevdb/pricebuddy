@@ -42,7 +42,7 @@
             <x-filament::icon
                 :icon="Trend::getIcon($product->trend)"
                 class="ml-auto w-4 text-custom-600 dark:text-custom-400"
-                title="Price trending {{ $product->trend }}"
+                title="Current price is {{ strtolower(Trend::getText($product->trend)) }}"
             />
         </div>
     </div>
