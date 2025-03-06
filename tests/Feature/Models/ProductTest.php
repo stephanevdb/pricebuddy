@@ -94,12 +94,15 @@ class ProductTest extends TestCase
     public function test_price_trend_for_lowest_priced_store()
     {
         $product = $this->createOneProductWithUrlAndPrices(prices: [60, 60, 30]);
+        $this->assertSame(Trend::Lowest->value, $product->trend);
+
+        $product = $this->createOneProductWithUrlAndPrices(prices: [60, 50, 30, 40]);
         $this->assertSame(Trend::Down->value, $product->trend);
 
         $product = $this->createOneProductWithUrlAndPrices(prices: [60, 60, 70]);
         $this->assertSame(Trend::Up->value, $product->trend);
 
-        $product = $this->createOneProductWithUrlAndPrices(prices: [60, 60, 60]);
+        $product = $this->createOneProductWithUrlAndPrices(prices: [60, 59, 61, 60]);
         $this->assertSame(Trend::None->value, $product->trend);
     }
 
@@ -193,7 +196,7 @@ class ProductTest extends TestCase
         $this->assertIsInt($first['url_id']);
         $this->assertSame($firstUrl->url, $first['url']);
 
-        $this->assertSame('down', $first['trend']);
+        $this->assertSame('lowest', $first['trend']);
         $this->assertSame(5.1, $first['price']);
         $this->assertSame([
             '2025-01-07' => 20.2,
@@ -296,7 +299,7 @@ class ProductTest extends TestCase
         $this->assertIsString($firstItem->getStoreName());
         $this->assertIsInt($firstItem->getUrlId());
         $this->assertIsString($firstItem->getUrl());
-        $this->assertTrue(in_array($firstItem->getTrend(), ['up', 'down', 'none']));
+        $this->assertTrue(in_array($firstItem->getTrend(), ['up', 'down', 'lowest', 'none']));
         $this->assertIsFloat($firstItem->getPrice());
         $this->assertInstanceOf(Collection::class, $firstItem->getHistory());
     }
