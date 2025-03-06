@@ -12,13 +12,13 @@ config:
 # Additional lando commands.
 tooling:
   build:
-    service: appserver
-    description: Run composer install and npm build
+    service: node
+    description: Run npm build
     cmd:
-      - composer install
+      - rm /app/public/hot
       - npm rebuild node-sass
       - npm install
-      - npm run prod
+      - npm run build
   npm:
     service: node
     description: Runs a npm command
