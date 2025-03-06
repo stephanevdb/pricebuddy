@@ -42,6 +42,7 @@ export default function pbChart({ cachedData, options, type }) {
 
         initChart: function (data = null) {
             Chart.defaults.animation.duration = 0
+            if (this.getChart()) this.getChart().destroy()
 
             return new Chart(this.$refs.canvas, {
                 type: type,
