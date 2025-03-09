@@ -17,6 +17,15 @@ class ProductSeeder extends Seeder
      */
     protected array $dummy = [
         [
+            'title' => 'Airpods 4',
+            'urls' => [
+                'https://www.amazon.com/Apple-Bluetooth-Headphones-Personalized-Effortless/dp/B0DGHMNQ5Z' => ['199', '199', '189', '189', '199'],
+                'https://www.ebay.com/itm/405476505625' => ['129', '129', '129', '129', '119'],
+            ],
+            'image' => 'https://m.media-amazon.com/images/I/61iBtxCUabL._AC_SX679_.jpg',
+            'tag' => 'Tech',
+        ],
+        [
             'title' => 'Amazon Echo Dot',
             'urls' => [
                 'https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3' => ['49.99', '49.99', '39.99', '39.99', '59', '59', '49.99'],
@@ -33,15 +42,6 @@ class ProductSeeder extends Seeder
             ],
             'image' => 'https://m.media-amazon.com/images/I/812-y3MIhmL._AC_SX679_PIbundle-2,TopRight,0,0_SH20_.jpg',
             'tag' => 'Household',
-        ],
-        [
-            'title' => 'Airpods 4',
-            'urls' => [
-                'https://www.amazon.com/Apple-Bluetooth-Headphones-Personalized-Effortless/dp/B0DGHMNQ5Z' => ['199', '199', '189', '189', '199'],
-                'https://www.ebay.com/itm/405476505625' => ['129', '129', '129', '129', '119'],
-            ],
-            'image' => 'https://m.media-amazon.com/images/I/61iBtxCUabL._AC_SX679_.jpg',
-            'tag' => 'Tech',
         ],
     ];
 

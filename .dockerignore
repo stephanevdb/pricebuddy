@@ -3,3 +3,4 @@ storage
 public/build
 public/hot
 node_modules
+core

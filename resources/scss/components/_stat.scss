@@ -1,0 +1,37 @@
+.fi-wi-stats-overview-stat {
+    &__top {
+        display: flex;
+        align-items: stretch;
+    }
+
+    &__actions {
+        > a,
+        > button {
+            width: auto;
+        }
+    }
+
+    &__chart,
+    &__card {
+        .expanded & {
+            border-bottom-left-radius: 0 !important;
+        }
+    }
+
+    &__context {
+        align-content: stretch;
+        align-items: stretch;
+    }
+
+    &__context-button {
+        width: 2.5rem;
+        border-radius: 0 0.75rem 0.75rem 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: stretch;
+    }
+}
+
+
+

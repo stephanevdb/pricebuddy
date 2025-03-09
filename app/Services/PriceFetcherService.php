@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Jobs\UpdatePricesJob;
 use App\Models\Product;
+use App\Notifications\ScrapeFailNotification;
 use App\Settings\AppSettings;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Sleep;
@@ -66,6 +67,8 @@ class PriceFetcherService
                         'product_id' => $product->id,
                     ]);
                 }
+
+                $product->user?->notify(new ScrapeFailNotification($product));
 
                 Sleep::for(AppSettings::new()->sleep_seconds_between_scrape)->seconds();
             });

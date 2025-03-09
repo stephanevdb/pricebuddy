@@ -101,6 +101,17 @@ class PriceCacheDto
         return collect($this->history)->reverse()->take($count)->reverse();
     }
 
+    public function getAggregateFormatted(): array
+    {
+        $history = $this->getHistory();
+
+        return [
+            'avg' => Number::currency($history->avg()),
+            'min' => Number::currency($history->min()),
+            'max' => Number::currency($history->max()),
+        ];
+    }
+
     public function getLastScrapeDate(): ?Carbon
     {
         return $this->lastScrapeDate;

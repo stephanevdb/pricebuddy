@@ -15,7 +15,7 @@ tooling:
     service: node
     description: Run npm build
     cmd:
-      - rm /app/public/hot
+      - rm -rf /app/public/hot
       - npm rebuild node-sass
       - npm install
       - npm run build
@@ -39,7 +39,7 @@ tooling:
     service: node
     description: watches changes to theme and recompile
     cmd:
-      - killall node 2>/dev/null || true
+      - kill $(ps aux | grep node | grep -v grep | awk '{print $2}') > /dev/null 2>&1 || true
       - npm run dev -- --host --port 3000
   prepare-storage:
     service: appserver
@@ -97,7 +97,7 @@ services:
     services:
       command: /start-app.sh
     scanner:
-      retry: 2
+      retry: 5
   scraper:
     type: lando
     app_mount: false

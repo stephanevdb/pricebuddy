@@ -47,7 +47,7 @@ class RangeChart extends Component
         $datasets = [
             [
                 'label' => 'Min',
-                'data' => array_values($data['min']),
+                'data' => array_values($data['min'] ?? []),
                 'backgroundColor' => 'rgba('.$colorRgb.', 0.2)',
                 'borderColor' => 'rgba('.$colorRgb.', 1)',
                 'borderWidth' => 2,
@@ -57,7 +57,7 @@ class RangeChart extends Component
             ],
             [
                 'label' => 'Avg',
-                'data' => array_values($data['avg']),
+                'data' => array_values($data['avg'] ?? []),
                 'backgroundColor' => 'rgba(0, 0, 0, 0.4)',
                 'borderColor' => 'rgba('.$colorRgb.', 0)',
                 'borderWidth' => 3,
@@ -66,7 +66,7 @@ class RangeChart extends Component
             ],
             [
                 'label' => 'Max',
-                'data' => array_values($data['max']),
+                'data' => array_values($data['max'] ?? []),
                 'backgroundColor' => 'rgba('.$colorRgb.', 0.2)',
                 'borderColor' => 'rgba(0, 0, 0, 0)',
                 'borderWidth' => 1,
@@ -78,7 +78,7 @@ class RangeChart extends Component
 
         $this->cachedDatasets = [
             'datasets' => $datasets,
-            'labels' => array_keys($data['avg']),
+            'labels' => array_keys($data['avg'] ?? []),
         ];
     }
 }

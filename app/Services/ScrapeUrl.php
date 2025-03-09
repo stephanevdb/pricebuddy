@@ -6,6 +6,7 @@ use App\Enums\ScraperService;
 use App\Models\Store;
 use App\Services\Helpers\SettingsHelper;
 use App\Settings\AppSettings;
+use Exception;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Uri;
@@ -117,41 +118,47 @@ class ScrapeUrl
             return false;
         }
 
-        $this->setScraper($store->scraper_service);
-
-        $scraper = $this->webScraper->from($this->url)
-            ->setCacheMinsTtl(AppSettings::new()->scrape_cache_ttl)
-            ->setUseCache($useCache)
-            ->setOptions($store->scraper_options);
-
-        $page = $scraper->get();
-
         $output = [
             'store' => $store,
         ];
 
-        if ($errors = $scraper->getErrors()) {
-            $this->logger->error('Error scraping URL', [
-                'store_id' => $store->getKey(),
-                'errors' => $errors,
-            ]);
-            $this->errorNotification('Error scraping URL check logs');
+        try {
+            $this->setScraper($store->scraper_service);
 
-            return $output;
-        }
+            $scraper = $this->webScraper->from($this->url)
+                ->setCacheMinsTtl(AppSettings::new()->scrape_cache_ttl)
+                ->setUseCache($useCache)
+                ->setOptions($store->scraper_options);
 
-        $strategy = data_get($store, 'scrape_strategy', []);
+            $page = $scraper->get();
 
-        foreach ($this->keys as $key) {
-            if (empty($strategy[$key]) || ! is_array($strategy[$key])) {
-                $output[$key] = null;
-            } else {
-                $output[$key] = $this->scrapeOption($page, $strategy[$key]);
+            if ($errors = $scraper->getErrors()) {
+                $this->logger->error('Error scraping URL', [
+                    'store_id' => $store->getKey(),
+                    'errors' => $errors,
+                ]);
+                $this->errorNotification('Error scraping URL check logs');
+
+                return $output;
             }
-        }
 
-        $output['body'] = $page->getBody();
-        $output['errors'] = $scraper->getErrors();
+            $strategy = data_get($store, 'scrape_strategy', []);
+
+            foreach ($this->keys as $key) {
+                if (empty($strategy[$key]) || ! is_array($strategy[$key])) {
+                    $output[$key] = null;
+                } else {
+                    $output[$key] = $this->scrapeOption($page, $strategy[$key]);
+                }
+            }
+
+            $output['body'] = $page->getBody();
+            $output['errors'] = $scraper->getErrors();
+        } catch (Exception $e) {
+            $this->logger->error('Error scraping URL', [
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return $output;
     }
@@ -160,7 +167,7 @@ class ScrapeUrl
     {
         $host = Uri::of($this->url)->host();
 
-        return Store::whereJsonContains('domains', ['domain' => $host])->oldest()->first();
+        return Store::query()->domainFilter($host)->oldest()->first();
     }
 
     protected function scrapeOption(WebScraperInterface $scraper, array $options): ?string

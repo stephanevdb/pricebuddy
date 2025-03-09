@@ -154,7 +154,7 @@ class Product extends Model
     }
 
     /**
-     * Scope lowest price in days.
+     * Scope the lowest price in days.
      */
     public function scopeLowestPriceInDays(EloquentBuilder $query, int $days = 7): EloquentBuilder
     {

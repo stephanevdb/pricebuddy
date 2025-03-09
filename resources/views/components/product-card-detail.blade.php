@@ -33,17 +33,6 @@
         <div class="py-2 px-4 border-t border-t-gray-200 dark:border-t-gray-800 bg-white dark:bg-gray-900">
             @include('components.prices-column', ['items' => $product->price_cache])
         </div>
-        <div class="mt-1 py-2 px-4 gap-2 flex border-t border-t-gray-200 dark:border-t-gray-800">
-            @foreach (['min', 'avg', 'max'] as $agg)
-                <div class="text-xs text-gray-500 dark:text-gray-400 pr-2">
-                    {{ ucfirst($agg) }}: {{ $product->price_aggregates[$agg] }}
-                </div>
-            @endforeach
-            <x-filament::icon
-                :icon="Trend::getIcon($product->trend)"
-                class="ml-auto w-4 text-custom-600 dark:text-custom-400"
-                title="Current price is {{ strtolower(Trend::getText($product->trend)) }}"
-            />
-        </div>
+        @include('components.price-aggregates', ['aggregates' => $product->price_aggregates, 'trend' => $product->trend])
     </div>
 </div>
