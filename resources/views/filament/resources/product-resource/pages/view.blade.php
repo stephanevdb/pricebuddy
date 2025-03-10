@@ -79,6 +79,9 @@
 
             <div x-show="tab === 'history'">
                 @livewire(\App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart::class, ['record' => $record, 'lazy' => true])
+                <x-filament::section :heading="__('Min/max price history')" class="mt-6">
+                    <x-range-chart :product="$record" />
+                </x-filament::section>
             </div>
 
             @if ($searchEnabled)

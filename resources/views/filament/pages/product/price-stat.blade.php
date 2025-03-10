@@ -178,11 +178,10 @@
     </div>
 
     <div x-show="expanded">
-        <div class="fi-wi-stats-overview-stat__actions px-2 pt-2 pb-1 flex gap-4 justify-start items-center text-gray-500 dark:text-gray-400">
+        <div class="fi-wi-stats-overview-stat__actions px-3 pt-4 pb-3 flex gap-2 justify-start items-center text-gray-500 dark:text-gray-400">
             {{ ($this->viewAction)(['url' => $priceCache->getUrl()]) }}
             {{ ($this->fetchAction)(['url' => $priceCache->getUrlId()]) }}
             {{ ($this->deleteAction)(['url' => $priceCache->getUrlId()]) }}
-            <x-filament-actions::modals />
          </div>
         @include('components.price-aggregates', [
             'aggregates' => $priceCache->getAggregateFormatted(),
@@ -191,5 +190,6 @@
         ])
     </div>
 
+    <x-filament-actions::modals />
 
 </div>

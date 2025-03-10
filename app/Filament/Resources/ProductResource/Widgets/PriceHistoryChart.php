@@ -31,6 +31,8 @@ class PriceHistoryChart extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
+    protected static ?string $heading = 'Store price history';
+
     protected static ?string $pollingInterval = null;
 
     protected function getData(): array

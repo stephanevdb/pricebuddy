@@ -9,7 +9,6 @@ use Exception;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\StaticAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -52,17 +51,23 @@ class ProductUrlStats extends BaseWidget implements HasActions, HasForms
     {
         return Action::make('delete')
             ->size('sm')
-            ->defaultView(StaticAction::GROUPED_VIEW)
             ->icon('heroicon-o-trash')
             ->color('danger')
             ->outlined(false)
             ->requiresConfirmation(true)
             ->action(function ($arguments) {
-                Url::find($arguments['url'])?->delete();
+                $url = Url::find($arguments['url']);
+                $backUrl = $url?->product?->view_url;
+                $url?->delete();
+
                 Notification::make('deleted_url')
                     ->title('URL deleted')
                     ->success()
                     ->send();
+
+                if ($backUrl) {
+                    return redirect($backUrl);
+                }
             });
     }
 
@@ -70,19 +75,22 @@ class ProductUrlStats extends BaseWidget implements HasActions, HasForms
     {
         return Action::make('fetch')
             ->size('sm')
-            ->defaultView(StaticAction::GROUPED_VIEW)
+            ->color('gray')
             ->icon('heroicon-o-rocket-launch')
             ->outlined(false)
             ->action(function ($arguments) {
                 try {
                     $url = Url::find($arguments['url']);
-                    $backUrl = $url->product->view_url;
+                    $backUrl = $url->product?->view_url;
                     $url->updatePrice();
+
                     Notification::make('deleted_url')
                         ->title('Prices updated')
                         ->success()->send();
 
-                    return redirect($backUrl);
+                    if ($backUrl) {
+                        return redirect($backUrl);
+                    }
                 } catch (Exception $e) {
                     Notification::make('deleted_url_failed')
                         ->title('Couldn\'t fetch the product, refer to logs')
@@ -96,7 +104,7 @@ class ProductUrlStats extends BaseWidget implements HasActions, HasForms
     {
         return Action::make('buy')
             ->size('sm')
-            ->defaultView(StaticAction::GROUPED_VIEW)
+            ->color('gray')
             ->icon('heroicon-o-shopping-bag')
             ->outlined(false)
             ->url(fn ($arguments) => $arguments['url']);
