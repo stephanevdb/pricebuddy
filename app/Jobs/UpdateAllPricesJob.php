@@ -7,10 +7,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 
-class UpdatePricesJob implements ShouldQueue
+class UpdateAllPricesJob implements ShouldQueue
 {
     use Dispatchable;
     use Queueable;
+
+    public $timeout = PriceFetcherService::JOB_TIMEOUT;
 
     public function __construct(protected array $productIds = []) {}
 

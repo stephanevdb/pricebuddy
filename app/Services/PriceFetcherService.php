@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use App\Jobs\UpdatePricesJob;
+use App\Jobs\UpdateAllPricesJob;
+use App\Jobs\UpdateProductPricesJob;
 use App\Models\Product;
-use App\Notifications\ScrapeFailNotification;
-use App\Settings\AppSettings;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Sleep;
 
 class PriceFetcherService
 {
+    public const JOB_TIMEOUT = 1200; // 20 minutes
+
     protected array $config;
 
     protected bool $logging = false;
@@ -37,7 +37,7 @@ class PriceFetcherService
         Product::select('id')
             ->published()
             ->chunk(data_get($this->config, 'chunk_size'), function (EloquentCollection $productIds) {
-                UpdatePricesJob::dispatch($productIds->pluck('id')->toArray());
+                UpdateAllPricesJob::dispatch($productIds->pluck('id')->toArray());
             });
     }
 
@@ -52,25 +52,7 @@ class PriceFetcherService
             ->getProducts($productIds)
             ->each(function ($product) {
                 /** @var Product $product */
-                if ($this->logging) {
-                    logger()->info("Starting price fetch for: '{$product->title}'", [
-                        'product_id' => $product->id,
-                    ]);
-                }
-
-                $successful = $product->updatePrices();
-
-                if ($this->logging) {
-                    $prefix = $successful ? 'Successful' : 'Failed (or partially failed)';
-                    $method = $successful ? 'info' : 'warning';
-                    logger()->{$method}("$prefix price fetch for product: '{$product->title}'", [
-                        'product_id' => $product->id,
-                    ]);
-                }
-
-                $product->user?->notify(new ScrapeFailNotification($product));
-
-                Sleep::for(AppSettings::new()->sleep_seconds_between_scrape)->seconds();
+                UpdateProductPricesJob::dispatch($product, $this->logging);
             });
     }
 }

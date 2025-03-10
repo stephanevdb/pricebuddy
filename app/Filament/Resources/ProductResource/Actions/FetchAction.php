@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\ProductResource\Actions;
 
-use App\Jobs\UpdatePricesJob;
+use App\Jobs\UpdateAllPricesJob;
 use App\Models\Product;
 use Exception;
 use Filament\Actions\Action;
@@ -36,7 +36,7 @@ class FetchAction extends Action
                 /** @var Product $product */
                 $product = $this->getRecord();
 
-                UpdatePricesJob::dispatch([$product->id]);
+                UpdateAllPricesJob::dispatch([$product->id]);
 
                 $this->success();
             } catch (Exception $e) {
