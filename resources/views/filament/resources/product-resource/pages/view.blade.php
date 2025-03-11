@@ -8,14 +8,16 @@
     <div x-data="{ tab: 'overview' }">
         {{-- Tabs--}}
         <x-filament::tabs label="Content tabs" class="justify-stretch sm:justify-start">
-            <x-filament::tabs.item @click="tab = 'overview'" :alpine-active="'tab === \'overview\''" class="w-full sm:w-auto">
+            <x-filament::tabs.item @click="tab = 'overview'" :alpine-active="'tab === \'overview\''"
+                                   class="w-full sm:w-auto">
                 <div class="flex align-center gap-2">
                     <x-filament::icon icon="heroicon-m-rectangle-stack" class="w-4"/>
                     {{ __('Overview') }}
                 </div>
             </x-filament::tabs.item>
 
-            <x-filament::tabs.item @click="tab = 'history'" :alpine-active="'tab === \'history\''" class="w-full sm:w-auto">
+            <x-filament::tabs.item @click="tab = 'history'" :alpine-active="'tab === \'history\''"
+                                   class="w-full sm:w-auto">
                 <div class="flex align-center gap-2">
                     <x-filament::icon icon="heroicon-m-chart-bar" class="w-4"/>
                     {{ __('History') }}
@@ -23,7 +25,8 @@
             </x-filament::tabs.item>
 
             @if ($searchEnabled)
-                <x-filament::tabs.item @click="tab = 'search'" :alpine-active="'tab === \'search\''" class="w-full sm:w-auto">
+                <x-filament::tabs.item @click="tab = 'search'" :alpine-active="'tab === \'search\''"
+                                       class="w-full sm:w-auto">
                     <div class="flex align-center gap-2">
                         <x-filament::icon icon="heroicon-m-magnifying-glass" class="w-4"/>
                         {{ __('Search') }}
@@ -78,15 +81,17 @@
             </div>
 
             <div x-show="tab === 'history'">
-                @livewire(\App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart::class, ['record' => $record, 'lazy' => true])
+                @livewire(\App\Filament\Resources\ProductResource\Widgets\PriceHistoryChart::class, ['record' =>
+                $record, 'lazy' => true])
                 <x-filament::section :heading="__('Min/max price history')" class="mt-6">
-                    <x-range-chart :product="$record" />
+                    <x-range-chart :product="$record"/>
                 </x-filament::section>
             </div>
 
             @if ($searchEnabled)
                 <div x-show="tab === 'search'">
-                    @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductSearch::class, ['record' => $record, 'lazy' => true])
+                    @livewire(\App\Filament\Resources\ProductResource\Widgets\ProductSearch::class, ['record' =>
+                    $record, 'lazy' => true])
                 </div>
             @endif
 

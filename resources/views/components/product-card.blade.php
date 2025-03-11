@@ -12,12 +12,12 @@
     {{ $attributes->merge(['class' => 'pb-expandable-stat display-block w-full rounded-xl bg-gray-100 dark:bg-gray-800/30 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10']) }}
     x-data="{ expanded: false }"
 >
-<div class="flex">
-    <div
-        class="flex-1 bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 rounded-b-xl"
-        :class="expanded ? 'rounded-bl-none' : ''"
-    >
-        <a class="flex gap-2" href="{{ $product->view_url }}">
+    <div class="flex">
+        <div
+            class="flex-1 bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 rounded-b-xl"
+            :class="expanded ? 'rounded-bl-none' : ''"
+        >
+            <a class="flex gap-2" href="{{ $product->view_url }}">
                 <div class="w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 bg-white flex items-center">
                     <img src="{{ $product->primary_image }}" alt="{{ $product->title }}"
                          class="rounded-md display-block h-auto block w-20"/>
@@ -42,9 +42,9 @@
                 </div>
             </a>
 
-        <div class="bg-custom-400/10 hover:bg-custom-400/20">
-            <x-range-chart :product="$product" height="40px"/>
-        </div>
+            <div class="bg-custom-400/10 hover:bg-custom-400/20">
+                <x-range-chart :product="$product" height="40px"/>
+            </div>
 
         </div>
         <div class="pb-expandable-stat__context">
@@ -53,10 +53,10 @@
                 :class="expanded ? 'rotate-180' : 'collapsed'"
                 @click="expanded = !expanded"
             >
-                <x-filament::icon icon="heroicon-s-chevron-down" class="h-5 w-5" />
+                <x-filament::icon icon="heroicon-s-chevron-down" class="h-5 w-5"/>
             </button>
         </div>
     </div>
 
-    <x-product-card-detail :product="$product" class="rounded-bl-xl" />
+    <x-product-card-detail :product="$product" class="rounded-bl-xl"/>
 </div>

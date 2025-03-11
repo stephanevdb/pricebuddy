@@ -6,7 +6,7 @@ use App\Dto\PriceCacheDto;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Contracts\View\View;
 
-class PriceStat extends Stat
+class ProductUrlStat extends Stat
 {
     public ?PriceCacheDto $priceCache = null;
 

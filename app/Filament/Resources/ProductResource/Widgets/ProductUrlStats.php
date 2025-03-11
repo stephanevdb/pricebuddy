@@ -38,7 +38,7 @@ class ProductUrlStats extends BaseWidget implements HasActions, HasForms
 
         $products = $product->getPriceCache()
             ->map(function (PriceCacheDto $cache, $idx) {
-                return PriceStat::make(
+                return ProductUrlStat::make(
                     '@ '.$cache->getStoreName().($idx === 0 ? ' (Lowest price)' : ''),
                     $cache->getPriceFormatted()
                 )->setPriceCache($idx, $cache);
