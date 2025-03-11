@@ -1,5 +1,5 @@
 @php
-    $maxHeight = $maxHeight ?? null;
+    $height = $height ?? '50px';
 @endphp
 <div>
     <div
@@ -11,13 +11,12 @@
             options: @js($options),
             type: @js($type),
         })"
+        {{ $attributes->merge(['class' => 'relative']) }}
     >
         <canvas
+            class="absolute inset-0 top-1 bottom-1"
             x-ref="canvas"
             id="{{ uniqid('chart-canvas-'.$product->getKey().'-') }}"
-            @if ($maxHeight)
-                style="max-height: {{ $maxHeight }}"
-            @endif
         ></canvas>
     </div>
 </div>

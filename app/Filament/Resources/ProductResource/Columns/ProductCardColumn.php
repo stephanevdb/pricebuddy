@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 
 class ProductCardColumn extends Column
 {
-    protected string $view = 'components.product-card-detail';
+    protected string $view = 'filament.resources.product-resource.columns.product-card';
 
     public function render(): View
     {

@@ -8,34 +8,55 @@
 
 @endphp
 <div
-    class="display-block w-full rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10"
     style="{{ Filament\Support\get_color_css_variables(Trend::getColor($product->trend), shades: [300, 500, 400, 600, 800]) }}"
+    {{ $attributes->merge(['class' => 'pb-expandable-stat display-block w-full rounded-xl bg-gray-100 dark:bg-gray-800/30 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10']) }}
+    x-data="{ expanded: false }"
 >
-    <a class="flex gap-2" href="{{ $product->view_url }}">
-        <div class="w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 bg-white flex items-center">
-            <img src="{{ $product->primary_image }}" alt="{{ $product->title }}"
-                 class="rounded-md display-block h-auto block w-20"/>
-        </div>
-        <div class="my-1 flex flex-col min-w-0 justify-center" style="width: calc(100% - 5rem)">
-            <h3
-                class="mb-1 text-sm text-gray-500 dark:text-gray-400 font-bold truncate min-w-0"
-                style="max-width: 13rem"
-                title="{{ $product->title }}"
-            >
-                {{ $product->title }}
-            </h3>
-            <div>
+<div class="flex">
+    <div
+        class="flex-1 bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 rounded-b-xl"
+        :class="expanded ? 'rounded-bl-none' : ''"
+    >
+        <a class="flex gap-2" href="{{ $product->view_url }}">
+                <div class="w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 bg-white flex items-center">
+                    <img src="{{ $product->primary_image }}" alt="{{ $product->title }}"
+                         class="rounded-md display-block h-auto block w-20"/>
+                </div>
+                <div class="my-1 flex flex-col min-w-0 justify-center" style="width: calc(100% - 5rem)">
+                    <h3
+                        class="mb-1 text-sm text-gray-500 dark:text-gray-400 font-bold truncate min-w-0"
+                        style="max-width: 13rem"
+                        title="{{ $product->title }}"
+                    >
+                        {{ $product->title }}
+                    </h3>
+                    <div>
                 <span class="text-2xl font-semibold">
                     {{ $latestPrice->getPriceFormatted() }}
                 </span>
-                <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
                     {{ '@'.$latestPrice->getStoreName() }}
                 </span>
-                @include('components.product-badges', ['product' => $product])
-            </div>
+                        @include('components.product-badges', ['product' => $product])
+                    </div>
+                </div>
+            </a>
+
+        <div class="bg-custom-400/10 hover:bg-custom-400/20">
+            <x-range-chart :product="$product" height="40px"/>
         </div>
-    </a>
 
-    <x-product-card-detail :product="$product" />
+        </div>
+        <div class="pb-expandable-stat__context">
+            <button
+                class="pb-expandable-stat__context-button h-full opacity-50 hover:opacity-100"
+                :class="expanded ? 'rotate-180' : 'collapsed'"
+                @click="expanded = !expanded"
+            >
+                <x-filament::icon icon="heroicon-s-chevron-down" class="h-5 w-5" />
+            </button>
+        </div>
+    </div>
 
+    <x-product-card-detail :product="$product" class="rounded-bl-xl" />
 </div>

@@ -1,7 +1,5 @@
 import Chart from 'chart.js/auto'
-import { debounce } from "lodash";
 
-// test.
 export default function pbChart({ cachedData, options, type }) {
     return {
         init: function () {
@@ -83,34 +81,36 @@ export default function pbChart({ cachedData, options, type }) {
                     title: {
                         display: false
                     },
-                    tooltip: {
-                        display: true,
-                        caretSize: 0,
-                        displayColors: false,
-                        callbacks: {
-                            title: function(context) {
-                                const date = new Date(context[0].label)
-                                return date.toLocaleDateString(undefined, {
-                                    weekday: "long",
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })
-                            },
-                            label: (context) => {
-                                const idx = context.dataIndex;
-                                const datasets = cachedData.datasets
-
-                                let min = datasets[0].data[idx] || 0;
-                                let avg = (datasets[1].data[idx] || 0) + min;
-                                let max = (datasets[2].data[idx] || 0) + avg;
-
-                                const currency = this.getCurrency()
-
-                                return `Min: ${currency.format(min)} - Avg: ${currency.format(avg)} - Max: ${currency.format(max)}`
-                            }
-                        }
-                    }
+                    tooltip: false,
+                    // @todo do we want tooltips on the chart? its a bit messy.
+                    // tooltip: {
+                    //     display: false,
+                    //     caretSize: 0,
+                    //     displayColors: false,
+                    //     callbacks: {
+                    //         title: function(context) {
+                    //             const date = new Date(context[0].label)
+                    //             return date.toLocaleDateString(undefined, {
+                    //                 weekday: "long",
+                    //                 year: "numeric",
+                    //                 month: "long",
+                    //                 day: "numeric",
+                    //             })
+                    //         },
+                    //         label: (context) => {
+                    //             const idx = context.dataIndex;
+                    //             const datasets = cachedData.datasets
+                    //
+                    //             let min = datasets[0].data[idx] || 0;
+                    //             let avg = (datasets[1].data[idx] || 0) + min;
+                    //             let max = (datasets[2].data[idx] || 0) + avg;
+                    //
+                    //             const currency = this.getCurrency()
+                    //
+                    //             return `Min: ${currency.format(min)} - Avg: ${currency.format(avg)} - Max: ${currency.format(max)}`
+                    //         }
+                    //     }
+                    // }
                 },
                 elements: {
                     point:{

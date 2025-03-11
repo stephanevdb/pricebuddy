@@ -37,11 +37,11 @@
         : 'p-4 px-5';
 @endphp
 <div
-    class="fi-wi-stats-overview-stat fi-wi-stats-overview-stat-wrapper bg-gray-100 dark:bg-gray-800/30 ring-1 ring-gray-950/5 dark:ring-white/10 rounded-xl"
+    class="fi-wi-stats-overview-stat pb-expandable-stat bg-gray-100 dark:bg-gray-800/30 ring-1 ring-gray-950/5 dark:ring-white/10 rounded-xl"
     x-data="{ expanded: false }"
     :class="expanded ? 'expanded' : 'collapsed'"
 >
-    <div class="fi-wi-stats-overview-stat__top">
+    <div class="pb-expandable-stat__top">
     <{!! $tag !!}
     @if ($url)
         {{ \Filament\Support\generate_href_html($url, $shouldOpenUrlInNewTab()) }}
@@ -49,7 +49,7 @@
     {{
         $getExtraAttributeBag()
             ->class([
-                'fi-wi-stats-overview-stat__card flex-1 relative block rounded-xl rounded-tr-none bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 '.$wrapperStyle,
+                'pb-expandable-stat__card flex-1 relative block rounded-xl rounded-tr-none bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 '.$wrapperStyle,
             ])
     }}
     >
@@ -125,7 +125,7 @@
                                 values: @js(array_values($chart)),
                             })"
                 @class([
-                    'fi-wi-stats-overview-stat__chart absolute inset-x-0 bottom-0 overflow-hidden rounded-b-xl',
+                    'pb-expandable-stat__chart absolute inset-x-0 bottom-0 overflow-hidden rounded-b-xl',
                     match ($chartColor) {
                         'gray' => null,
                         default => 'fi-color-custom',
@@ -166,9 +166,9 @@
     @endif
 
     </{!! $tag !!}>
-    <div class="fi-wi-stats-overview-stat__context">
+    <div class="pb-expandable-stat__context">
         <button
-            class="fi-wi-stats-overview-stat__context-button h-full opacity-50 hover:opacity-100"
+            class="pb-expandable-stat__context-button h-full opacity-50 hover:opacity-100"
             :class="expanded ? 'rotate-180' : 'collapsed'"
             @click="expanded = !expanded"
         >
@@ -178,7 +178,7 @@
     </div>
 
     <div x-show="expanded">
-        <div class="fi-wi-stats-overview-stat__actions px-3 pt-4 pb-3 flex gap-2 justify-start items-center text-gray-500 dark:text-gray-400">
+        <div class="pb-expandable-stat__actions px-3 pt-4 pb-3 flex gap-2 justify-start items-center text-gray-500 dark:text-gray-400">
             {{ ($this->viewAction)(['url' => $priceCache->getUrl()]) }}
             {{ ($this->fetchAction)(['url' => $priceCache->getUrlId()]) }}
             {{ ($this->deleteAction)(['url' => $priceCache->getUrlId()]) }}
