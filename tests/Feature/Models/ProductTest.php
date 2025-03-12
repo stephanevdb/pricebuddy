@@ -313,9 +313,9 @@ class ProductTest extends TestCase
                 'notify_percent' => null,
             ]);
 
-        $this->assertTrue($product->shouldNotifyOnPrice(49.99));
-        $this->assertTrue($product->shouldNotifyOnPrice(50));
-        $this->assertFalse($product->shouldNotifyOnPrice(60.01));
+        $this->assertTrue($product->shouldNotifyOnPrice(new Price(['price' => 49.99])));
+        $this->assertTrue($product->shouldNotifyOnPrice(new Price(['price' => 50])));
+        $this->assertFalse($product->shouldNotifyOnPrice(new Price(['price' => 60.01])));
 
         $product = $this->createOneProductWithUrlAndPrices(
             prices: [30, 50],
@@ -324,10 +324,10 @@ class ProductTest extends TestCase
                 'notify_percent' => 10.0,
             ]);
 
-        $this->assertFalse($product->shouldNotifyOnPrice(30.0));
-        $this->assertFalse($product->shouldNotifyOnPrice(27.01));
-        $this->assertTrue($product->shouldNotifyOnPrice(27));
-        $this->assertTrue($product->shouldNotifyOnPrice(5));
+        $this->assertFalse($product->shouldNotifyOnPrice(new Price(['price' => 30.0])));
+        $this->assertFalse($product->shouldNotifyOnPrice(new Price(['price' => 27.01])));
+        $this->assertTrue($product->shouldNotifyOnPrice(new Price(['price' => 27])));
+        $this->assertTrue($product->shouldNotifyOnPrice(new Price(['price' => 5])));
     }
 
     protected function createOneProductWithUrlAndPrices(string $url = self::DEFAULT_URL, array $prices = [10, 15, 20], array $attrs = []): Product

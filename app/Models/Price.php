@@ -25,6 +25,7 @@ class Price extends Model
 
     protected $casts = [
         'created_at' => 'datetime',
+        'notified' => 'boolean',
     ];
 
     public static function booted(): void

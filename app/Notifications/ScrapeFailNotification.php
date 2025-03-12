@@ -36,7 +36,7 @@ class ScrapeFailNotification extends Notification
         return DatabaseNotification::make()
             ->title('Error scraping product urls')
             ->body($this->product->title(100))
-            ->color('warning')
+            ->status('warning')
             ->actions([
                 Action::make('view')
                     ->url(parse_url($this->product->view_url, PHP_URL_PATH))

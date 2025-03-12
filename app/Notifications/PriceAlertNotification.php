@@ -56,6 +56,7 @@ class PriceAlertNotification extends Notification
         return DatabaseNotification::make()
             ->title($this->getTitle())
             ->body($this->getSummary())
+            ->status('success')
             ->actions([
                 Action::make('view')
                     ->url(parse_url($this->getUrl(), PHP_URL_PATH), false)

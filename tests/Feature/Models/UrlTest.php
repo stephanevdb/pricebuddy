@@ -176,4 +176,41 @@ class UrlTest extends TestCase
             $this->assertSame($new, $urlModel->buy_url);
         }
     }
+
+    public function test_should_notify_on_price()
+    {
+        Price::withoutEvents(function () {
+            // Not previously notified.
+            $product = $this->createOneProductWithUrlAndPrices(prices: [10, 10, 10]);
+            /** @var Url $url */
+            $url = $product->urls()->first();
+            $url->prices->each(fn (Price $price) => $price->update(['notified' => false]));
+            $this->assertTrue($url->shouldNotifyOnPrice($url->prices()->latest()->first()));
+
+            // First price notified already.
+            $product = $this->createOneProductWithUrlAndPrices(prices: [10, 10, 10]);
+            /** @var Url $url */
+            $url = $product->urls()->first();
+            $url->prices->each(fn (Price $price) => $price->update(['notified' => false]));
+            $url->prices()->oldest()->first()->update(['notified' => true]);
+            $this->assertFalse($url->shouldNotifyOnPrice($url->prices()->latest()->first()));
+
+            // Price has changed, should re-notify.
+            $product = $this->createOneProductWithUrlAndPrices(prices: [10, 20, 10]);
+            /** @var Url $url */
+            $url = $product->urls()->first();
+            $url->prices->sortBy('created_at')
+                ->values()
+                ->each(fn (Price $price, int $idx) => $price->update(['notified' => $idx === 0]));
+            $this->assertTrue($url->shouldNotifyOnPrice($url->prices()->oldest()->first()));
+        });
+
+    }
+
+    protected function createOneProductWithUrlAndPrices(string $url = 'https://example.com', array $prices = [10, 15, 20], array $attrs = []): Product
+    {
+        return Product::factory()
+            ->addUrlWithPrices($url, $prices)
+            ->createOne($attrs);
+    }
 }

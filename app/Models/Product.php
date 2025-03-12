@@ -270,7 +270,7 @@ class Product extends Model
     public function isNotifiedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn ($value): bool => $this->shouldNotifyOnPrice($this->current_price)
+            get: fn ($value): bool => $this->shouldNotifyOnPrice(new Price(['price' => $this->current_price]))
         );
     }
 
@@ -489,10 +489,12 @@ class Product extends Model
             ]);
     }
 
-    public function shouldNotifyOnPrice(float $price): bool
+    public function shouldNotifyOnPrice(Price $price): bool
     {
+        $priceValue = (float) $price->price;
+
         // Check if price is less than notify price.
-        if (! empty($this->notify_price) && $price <= (float) $this->notify_price) {
+        if (! empty($this->notify_price) && $priceValue <= (float) $this->notify_price) {
             return true;
         }
 
@@ -511,7 +513,7 @@ class Product extends Model
             $notifyPrice = $firstPrice - ($firstPrice * ($this->notify_percent / 100));
 
             // Check if percent is greater than notify percent.
-            return $price <= $notifyPrice;
+            return $priceValue <= $notifyPrice;
         }
 
         return false;

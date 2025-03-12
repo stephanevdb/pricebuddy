@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
@@ -28,6 +29,7 @@ use Illuminate\Support\Str;
  * @property ?Store $store
  * @property ?Product $product
  * @property ?int $store_id
+ * @property Collection $prices
  */
 class Url extends Model
 {
@@ -43,6 +45,10 @@ class Url extends Model
     }
 
     protected $guarded = [];
+
+    /***************************************************
+     * Relationships.
+     **************************************************/
 
     public function store(): BelongsTo
     {
@@ -63,6 +69,63 @@ class Url extends Model
     {
         return $this->prices()->limit(1);
     }
+
+    /***************************************************
+     * Attributes.
+     **************************************************/
+
+    public function productNameShort(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->product->title_short ?? 'Unknown'
+        );
+    }
+
+    public function storeName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Str::limit(($this->store->name ?? 'Missing store'), 100)
+        );
+    }
+
+    protected function buyUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => AffiliateHelper::new()->parseUrl($this->url)
+        );
+    }
+
+    protected function productUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->product?->action_urls['view'] ?? '/'
+        );
+    }
+
+    protected function latestPriceFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Number::currency($this->latestPrice()->first()->price ?? 0)
+        );
+    }
+
+    /**
+     * Price trend for lowest priced store.
+     */
+    public function averagePrice(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                $avg = $this->prices()->avg('price') ?? 0;
+
+                return Number::currency(round($avg, 2));
+            },
+        );
+    }
+
+    /***************************************************
+     * Helpers.
+     **************************************************/
 
     public function scrape(): array
     {
@@ -131,52 +194,36 @@ class Url extends Model
         ]);
     }
 
-    public function productNameShort(): Attribute
+    /**
+     * Get the last price the user was notified for.
+     */
+    public function lastNotifiedPrice(): Price|Model|null
     {
-        return Attribute::make(
-            get: fn () => $this->product->title_short ?? 'Unknown'
-        );
-    }
-
-    public function storeName(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => Str::limit(($this->store->name ?? 'Missing store'), 100)
-        );
-    }
-
-    protected function buyUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => AffiliateHelper::new()->parseUrl($this->url)
-        );
-    }
-
-    protected function productUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->product?->action_urls['view'] ?? '/'
-        );
-    }
-
-    protected function latestPriceFormatted(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => Number::currency($this->latestPrice()->first()->price ?? 0)
-        );
+        return $this->prices()
+            ->orderBy('created_at')
+            ->where('notified', true)
+            ->first();
     }
 
     /**
-     * Price trend for lowest priced store.
+     * Only notify if the price has changed.
      */
-    public function averagePrice(): Attribute
+    public function shouldNotifyOnPrice(Price $price): bool
     {
-        return Attribute::make(
-            get: function ($value) {
-                $avg = $this->prices()->avg('price') ?? 0;
+        /** @var ?Price $lastNotified */
+        $lastNotified = $this->lastNotifiedPrice();
 
-                return Number::currency(round($avg, 2));
-            },
-        );
+        if (! $lastNotified) {
+            return true;
+        }
+
+        $pricesQuery = $this->prices()
+            ->orderBy('created_at')
+            ->where('created_at', '>=', (string) $lastNotified->created_at);
+
+        $all = $pricesQuery->count();
+        $samePrice = $pricesQuery->where('price', $price->price)->count();
+
+        return $all > $samePrice;
     }
 }
