@@ -38,7 +38,9 @@ class UpdateProductPricesJob implements ShouldQueue
             ]);
         }
 
-        $this->product->user?->notify(new ScrapeFailNotification($this->product));
+        if (! $successful) {
+            $this->product->user?->notify(new ScrapeFailNotification($this->product));
+        }
 
         Sleep::for(AppSettings::new()->sleep_seconds_between_scrape)->seconds();
     }
