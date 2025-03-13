@@ -3,6 +3,7 @@
     use Filament\Support\Facades\FilamentView;
     use function Filament\Support\get_color_css_variables;
 
+    /** @var \App\Models\Product $product */
     /** @var \App\Dto\PriceCacheDto $priceCache */
     $chartColor = $getChartColor() ?? 'gray';
     $descriptionColor = $getDescriptionColor() ?? 'gray';
@@ -97,17 +98,34 @@
         @endif
     </div>
 
-    @if (! $priceCache->isLastScrapeSuccessful())
+    @if (! $priceCache->isLastScrapeSuccessful() || $priceCache->matchesNotification($product))
         <div class="mb-4">
-            @include('components.icon-badge', [
-                'hoverText' => __('Last scrape successful was :hours hours ago', [
-                    'hours' => $priceCache->getHoursSinceLastScrape() ?? 'never'
-                ]),
-                'label' => __('Last scrape failed'),
-                 'color' => 'warning',
-            ])
+            @if (! $priceCache->isLastScrapeSuccessful())
+                <div class="mb-2">
+                    @include('components.icon-badge', [
+                        'hoverText' => __('Last scrape successful was :hours hours ago', [
+                            'hours' => $priceCache->getHoursSinceLastScrape() ?? 'never'
+                        ]),
+                        'label' => __('Last scrape '.ceil($priceCache->getHoursSinceLastScrape()).'hrs ago'),
+                         'color' => 'warning',
+                    ])
+                </div>
+            @endif
+
+            @if ($priceCache->matchesNotification($product))
+                <div>
+                    @include('components.icon-badge', [
+                        'hoverText' => __('Price matches your target'),
+                        'label' => __('Notify match'),
+                        'color' => 'success',
+                        'icon' => 'heroicon-m-shopping-bag'
+                    ])
+                </div>
+            @endif
         </div>
     @endif
+
+
 
     @if ($chart = $getChart())
         {{-- An empty function to initialize the Alpine component with until it's loaded with `ax-load`. This removes the need for `x-ignore`, allowing the chart to be updated via Livewire polling. --}}

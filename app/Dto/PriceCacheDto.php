@@ -3,6 +3,8 @@
 namespace App\Dto;
 
 use App\Enums\Trend;
+use App\Models\Price;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Number;
@@ -127,6 +129,13 @@ class PriceCacheDto
         $hours = $this->getHoursSinceLastScrape();
 
         return $hours && $hours < 24;
+    }
+
+    public function matchesNotification(Product $product): bool
+    {
+        return $product->shouldNotifyOnPrice(new Price([
+            'price' => $this->getPrice(),
+        ]));
     }
 
     public static function fromArray(array $data): self

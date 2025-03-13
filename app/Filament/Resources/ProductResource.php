@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Illuminate\View\ComponentAttributeBag;
 
 class ProductResource extends Resource
 {
@@ -166,7 +167,8 @@ class ProductResource extends Resource
                                 ->url(fn (Product $record): string => $record->action_urls['view']),
 
                             Tables\Columns\ViewColumn::make('badges')
-                                ->view('components.product-badges'),
+                                ->view('components.product-badges')
+                                ->viewData(['attributes' => new ComponentAttributeBag(['class' => 'flex md:gap-3 flex-col md:flex-row'])]),
 
                             TextColumn::make('tags')
                                 ->color(Color::Gray)
@@ -174,7 +176,7 @@ class ProductResource extends Resource
                                 ->label('Tags')
                                 ->url(null)
                                 ->grow(false)
-                                ->extraAttributes(['class' => 'mt-1']),
+                                ->extraAttributes(['class' => 'mt-2 text-xs']),
                         ]),
                     ])->extraAttributes(['class' => 'max-w-md mb-2']),
 

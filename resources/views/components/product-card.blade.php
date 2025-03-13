@@ -31,13 +31,15 @@
                         {{ $product->title }}
                     </h3>
                     <div>
-                <span class="text-2xl font-semibold">
-                    {{ $latestPrice->getPriceFormatted() }}
-                </span>
+                        <span class="text-2xl font-semibold">
+                            {{ $latestPrice->getPriceFormatted() }}
+                        </span>
                         <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
-                    {{ '@'.$latestPrice->getStoreName() }}
-                </span>
-                        @include('components.product-badges', ['product' => $product])
+                            {{ '@'.$latestPrice->getStoreName() }}
+                        </span>
+                        <div class="block">
+                            @include('components.product-badges', ['product' => $product])
+                        </div>
                     </div>
                 </div>
             </a>
