@@ -40,7 +40,7 @@
             <div x-show="tab === 'overview'">
                 <div class="flex gap-3 md:gap-8 flex-col md:flex-row">
                     <div class="md:w-1/3 flex flex-col">
-                        <div class="bg-white rounded-lg p-4 mb-4 h-auto w-full flex justify-center">
+                        <div class="bg-white rounded-lg p-4 mb-4 h-auto w-full flex justify-center shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10">
                             <div class="">
                                 <img
                                     src="{{ $record->primary_image }}"
