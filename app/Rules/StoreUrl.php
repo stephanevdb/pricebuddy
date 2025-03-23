@@ -25,8 +25,8 @@ class StoreUrl implements DataAwareRule, ValidationRule
         if ($store) {
             $scrape = ScrapeUrl::new($value)->scrape();
 
-            if (empty($scrape['title'])) {
-                $fail('The url does not contain a valid title');
+            if (empty($scrape['title']) || empty($scrape['price'])) {
+                $fail('The url does not contain a valid title or price');
             }
         } elseif ($shouldCreateStore && ! AutoCreateStore::canAutoCreateFromUrl($value)) {
             $fail('Unable to auto create store');

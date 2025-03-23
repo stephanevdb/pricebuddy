@@ -9,11 +9,9 @@ it will be available to all users.
 
 Below will go into more detail on how to add or configure your own stores.
 
-## Name and initials
+## Store name
 
 As you would expect, this is just used for store identification in the UI.
-Initials can be left empty when adding a new store and they will be auto
-generated
 
 ## Domains
 

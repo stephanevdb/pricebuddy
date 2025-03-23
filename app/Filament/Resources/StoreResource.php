@@ -23,7 +23,6 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
 
@@ -52,13 +51,8 @@ class StoreResource extends Resource
                         ->label('Name')
                         ->hintIcon(Icons::Help->value, 'The name of the store')
                         ->required(),
-
-                    TextInput::make('initials')
-                        ->label('Initials')
-                        ->hintIcon(Icons::Help->value, 'Two characters to represent the store')
-                        ->rules(['max:2']),
                 ])
-                    ->columns(2)
+                    ->columns(1)
                     ->description(__('Stores are shared between all users in :name', ['name' => config('app.name')]))
                     ->live(),
 
@@ -131,15 +125,6 @@ class StoreResource extends Resource
             ->columns([
                 Split::make([
                     Split::make([
-                        TextColumn::make('initials')
-                            ->formatStateUsing(fn (string $state): View => view(
-                                'components.initials',
-                                ['initials' => $state],
-                            ))
-                            ->width('7%')
-                            ->label('')
-                            ->grow(false)
-                            ->alignCenter(),
                         TextColumn::make('name')
                             ->searchable()
                             ->sortable()
