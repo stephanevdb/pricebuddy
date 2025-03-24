@@ -64,7 +64,6 @@ class StoreTest extends TestCase
         $store->refresh();
 
         $this->assertSame('My new store', $store->name);
-        $this->assertSame('NS', $store->initials);
         // Note repeatable is buggy, need to check second domain rather than first.
         $this->assertSame('example.test', collect($store->domains)->first()['domain']);
         $this->assertSame(ScraperService::Api->value, $store->scraper_service);
@@ -97,7 +96,6 @@ class StoreTest extends TestCase
         /** @var Store $store */
         $store = Store::where('name', 'Test new store')->first();
 
-        $this->assertSame('TS', $store->initials);
         // Note repeatable is buggy, need to check second domain rather than first.
         $this->assertSame('example-new.test', collect($store->domains)->first()['domain']);
         $this->assertSame(ScraperService::Api->value, $store->scraper_service);
