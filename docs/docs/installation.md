@@ -39,14 +39,15 @@ If you just use the variables set in the docker compose file, you should be good
 
 ## Debugging install
 
-The `docker-compose.yml` file has been tested to get you up and running quickly. It 
-should create a `.env` file and setup the database schema, add default content and
-users.
+The `docker-compose.yml` file has been tested to get you up and running quickly. You 
+should create an `.env` file next to the docker-compose file otherwise docker will
+create a directory. The installation should setup the database schema, add default 
+content and users.
 
 If you have any issues, you can run the following commands to see what is happening:
 
 ```shell
-docker compose exec -it cat /app/storage/logs/laravel.log
+docker compose exec -it app cat /app/storage/logs/laravel.log
 ```
 
 You can also enable debugging via environment variables:
