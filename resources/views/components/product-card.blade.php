@@ -18,13 +18,13 @@
             :class="expanded ? 'rounded-bl-none' : ''"
         >
             <a class="flex gap-2" href="{{ $product->view_url }}">
-                <div class="w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 bg-white flex items-center">
+                <div class="w-20 h-20 min-w-20 m-2 rounded-md overflow-hidden p-1 flex items-center">
                     <img src="{{ $product->primary_image }}" alt="{{ $product->title }}"
                          class="rounded-md display-block h-auto block w-20"/>
                 </div>
                 <div class="my-1 flex flex-col min-w-0 justify-center" style="width: calc(100% - 5rem)">
                     <h3
-                        class="mb-1 text-sm text-gray-500 dark:text-gray-400 font-bold truncate min-w-0"
+                        class="mb-1 mt-2 text-sm text-gray-500 dark:text-gray-400 font-bold truncate min-w-0"
                         style="max-width: 13rem"
                         title="{{ $product->title }}"
                     >
@@ -37,7 +37,7 @@
                         <span class="text-xs text-gray-500 dark:text-gray-400 font-bold display-block">
                             {{ '@'.$latestPrice->getStoreName() }}
                         </span>
-                        <div class="block">
+                        <div class="block mb-2">
                             @include('components.product-badges', ['product' => $product])
                         </div>
                     </div>

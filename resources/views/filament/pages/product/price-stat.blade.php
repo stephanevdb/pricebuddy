@@ -35,7 +35,7 @@
 
     $wrapperStyle = $idx === 0
         ? 'p-6 px-5'
-        : 'p-4 px-5';
+        : 'p-4 pb-6 px-5';
 @endphp
 <div
     class="fi-wi-stats-overview-stat pb-expandable-stat bg-gray-100 dark:bg-gray-800/30 ring-1 ring-gray-950/5 dark:ring-white/10 rounded-xl"
@@ -99,7 +99,7 @@
     </div>
 
     @if (! $priceCache->isLastScrapeSuccessful() || $priceCache->matchesNotification($product))
-        <div class="mb-4">
+        <div class="mt-2 pb-4">
             @if (! $priceCache->isLastScrapeSuccessful())
                 <div class="mb-2">
                     @include('components.icon-badge', [

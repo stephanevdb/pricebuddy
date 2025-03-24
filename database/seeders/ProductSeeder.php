@@ -17,28 +17,27 @@ class ProductSeeder extends Seeder
      */
     protected array $dummy = [
         [
-            'title' => 'Airpods 4',
+            'title' => 'Apple Ipad WiFi',
             'urls' => [
-                'https://www.amazon.com/Apple-Bluetooth-Headphones-Personalized-Effortless/dp/B0DGHMNQ5Z' => ['199', '199', '189', '189', '199'],
-                'https://www.ebay.com/itm/405476505625' => ['129', '129', '129', '129', '119'],
+                'https://www.amazon.com.au/Apple-2025-iPad-Wi-Fi-128GB/dp/B0DZ8JZRXK' => ['615', '615', '599', '599', '597'],
+                'https://www.bigw.com.au/product/apple-ipad-a16-wi-fi-128gb-yellow-2025-/p/6016877' => ['649', '649', '589', '589', '599'],
             ],
-            'image' => 'https://m.media-amazon.com/images/I/61iBtxCUabL._AC_SX679_.jpg',
+            'image' => 'https://m.media-amazon.com/images/I/61aPY8odPSL._AC_SX679_.jpg',
             'tag' => 'Tech',
         ],
         [
-            'title' => 'Amazon Echo Dot',
+            'title' => 'Amazon Echo',
             'urls' => [
-                'https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3' => ['49.99', '49.99', '39.99', '39.99', '59', '59', '49.99'],
-                'https://www.ebay.com/itm/255775080771' => ['41.99', '41.99', '35.99', '19.99', '19.99', '49.99', '49.99'],
+                'https://www.amazon.com.au/All-new-Echo-4th-Gen-Premium-Sound-Smart-Home-Hub-Alexa-Twilight-Blue/dp/B085HKT3TB' => ['89', '89', '89', '94', '94', '94', '99'],
+                'https://www.jbhifi.com.au/products/amazon-echo-dot-smart-speaker-alexa-5th-gen-glacier-white' => ['75', '75', '69.99', '69.99', '69.99', '69', '69'],
             ],
-            'image' => 'https://m.media-amazon.com/images/I/71yRY8YlAbL._AC_SX679_.jpg',
+            'image' => 'https://m.media-amazon.com/images/I/71nOFvpDeZL._AC_SY450_.jpg',
             'tag' => 'Tech',
         ],
         [
-            'title' => 'Scott paper towels',
+            'title' => 'Paper towels',
             'urls' => [
-                'https://www.amazon.com/Scott-Towels-Choose-Sheet-Regular/dp/B0CT67D4JH/ref=sr_1_3' => ['19', '19', '29', '29', '35'],
-                'https://www.ebay.com/itm/365354442418' => ['39', '39', '29', '29', '29'],
+                'https://www.amazon.com.au/Bounty-Select-Towels-Triple-Sheets/dp/B08V4D8YBC' => ['45', '45', '42', '42', '39'],
             ],
             'image' => 'https://m.media-amazon.com/images/I/812-y3MIhmL._AC_SX679_PIbundle-2,TopRight,0,0_SH20_.jpg',
             'tag' => 'Household',
