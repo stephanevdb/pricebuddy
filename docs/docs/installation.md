@@ -10,6 +10,7 @@ provided to make this easy.
 mkdir pricebuddy
 cd pricebuddy
 wget https://raw.githubusercontent.com/jez500/pricebuddy/main/docker-compose.yml
+touch .env
 docker compose up -d
 ```
 

@@ -51,7 +51,7 @@ code changes.
 
 Easiest installation method is via docker-compose. Simply make a copy of 
 [docker-compose.yml](docker-compose.yml) then tweak it to your liking then run
-`docker compose up -d`. If using the defaults, the app will be available at
+`touch .env && docker compose up -d`. If using the defaults, the app will be available at
 `http://localhost:8080` with the username `admin@example.com` and password `admin`.
 
 ### Other methods 
